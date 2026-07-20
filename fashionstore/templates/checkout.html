@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+
+Checkout
+
+{% endblock %}
+
+{% block content %}
+
+<section class="checkout-page">
+
+<div class="container">
+
+<h1 class="mb-5">
+
+Checkout
+
+</h1>
+
+<div class="row">
+
+<!-- Billing -->
+
+<div class="col-lg-8">
+
+<div class="checkout-card">
+
+<h3>
+
+Billing Details
+
+</h3>
+
+<form method="POST">
+{% csrf_token %}
+
+<div class="row">
+
+<div class="col-md-6">
+
+<label>Full Name</label>
+
+<input type="text"
+class="form-control"
+name="fullname">
+
+</div>
+
+<div class="col-md-6">
+
+<label>Email</label>
+
+<input
+type="email"
+class="form-control"
+name="email">
+
+</div>
+
+<div class="col-md-6 mt-3">
+
+<label>Phone</label>
+
+<input
+type="text"
+class="form-control"
+name="phone">
+
+</div>
+
+<div class="col-md-6 mt-3">
+
+<label>City</label>
+
+<input
+type="text"
+class="form-control"
+name="city">
+
+</div>
+
+<div class="col-12 mt-3">
+
+<label>Address</label>
+
+<textarea
+class="form-control"
+rows="3"
+name="address"></textarea>
+
+</div>
+
+<div class="col-md-6 mt-3">
+
+<label>State</label>
+
+<input
+type="text"
+class="form-control"
+name="state">
+
+</div>
+
+<div class="col-md-6 mt-3">
+
+<label>Pincode</label>
+
+<input
+type="text"
+class="form-control"
+name="pincode">
+
+</div>
+
+</div>
+
+<h4 class="mt-5">
+
+Payment Method
+
+</h4>
+
+<div class="payment-box">
+
+<label>
+<input type="radio"
+name="payment"
+value="COD"
+checked>
+Cash on Delivery
+</label>
+
+<label>
+<input type="radio"
+name="payment"
+value="UPI">
+UPI
+</label>
+
+<label>
+<input type="radio"
+name="payment"
+value="Debit Card">
+Debit Card
+</label>
+
+<label>
+<input type="radio"
+name="payment"
+value="Credit Card">
+Credit Card
+</label>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+<!-- Summary -->
+
+<div class="col-lg-4">
+
+<div class="summary-box">
+
+<h3>
+
+Order Summary
+
+</h3>
+
+<hr>
+
+<div class="summary-row">
+
+<span>Subtotal</span>
+
+<span>
+
+₹{{ subtotal }}
+
+</span>
+
+</div>
+
+<div class="summary-row">
+
+<span>Shipping</span>
+
+<span>
+
+₹100
+
+</span>
+
+</div>
+
+<div class="summary-row">
+
+<span>Tax</span>
+
+<span>
+
+₹50
+
+</span>
+
+</div>
+
+<hr>
+
+<div class="summary-total">
+
+<span>Total</span>
+
+<span>
+
+₹{{ total }}
+
+</span>
+
+</div>
+
+<button
+type="submit"
+class="btn btn-dark w-100 mt-4">
+
+Place Order
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+
+Dashboard
+
+{% endblock %}
+
+{% block content %}
+
+<section class="dashboard-page">
+
+<div class="container">
+
+<div class="row">
+
+<!-- Sidebar -->
+
+<div class="col-lg-3">
+
+<div class="dashboard-sidebar">
+
+<div class="text-center">
+
+{% if request.user.profile_image %}
+    <img src="{{ request.user.profile_image.url }}" class="profile-image">
+{% else %}
+    <img src="{% static 'images/user.png' %}" class="profile-image">
+{% endif %}
+
+<h4>{{ request.user.username }}</h4>
+
+<p>{{ request.user.email }}</p>
+<p class="text-muted">
+    {{ request.user.role|title }}
+</p>
+
+</div>
+
+<hr>
+
+<a href="{% url 'profile' %}" class="active">
+    <i class="fa fa-user"></i>
+    My Profile
+</a>
+
+<a href="{% url 'orders' %}">
+    <i class="fa fa-box"></i>
+    My Orders
+</a>
+
+<a href="{% url 'wishlist' %}">
+    <i class="fa fa-heart"></i>
+    Wishlist
+</a>
+<a href="{% url 'dashboard' %}">
+    <i class="fa fa-location-dot"></i>
+    Addresses
+</a>
+
+<a href="{% url 'dashboard' %}">
+    <i class="fa fa-gear"></i>
+    Settings
+</a>
+
+<a href="{% url 'logout' %}">
+
+<i class="fa fa-right-from-bracket"></i>
+
+Logout
+
+</a>
+
+</div>
+
+</div>
+
+<!-- Content -->
+
+<div class="col-lg-9">
+
+<div class="dashboard-card">
+
+<h2>
+
+Welcome Back,
+{{ request.user.first_name }} 
+
+👋
+
+</h2>
+
+<p>
+
+Manage your profile and shopping activities.
+
+</p>
+
+</div>
+
+<div class="row mt-4">
+
+<div class="col-md-4">
+
+<div class="stat-card">
+
+<h1>
+
+{{ orders }}
+
+</h1>
+
+<p>
+
+Orders
+
+</p>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="stat-card">
+
+<h1>
+
+{{ wishlist }}
+
+</h1>
+
+<p>
+
+Wishlist
+
+</p>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="stat-card">
+
+<h1>
+
+{{ cart }}
+
+</h1>
+
+<p>
+
+Cart Items
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="dashboard-card mt-4">
+
+<h3>
+
+Recent Orders
+
+</h3>
+
+<table class="table">
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Status</th>
+
+<th>Total</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for order in recent_orders %}
+
+<tr>
+
+<td>
+
+#{{ order.id }}
+
+</td>
+
+<td>
+
+{{ order.status }}
+
+</td>
+
+<td>
+
+₹{{ order.total_price }}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+{% endblock %}

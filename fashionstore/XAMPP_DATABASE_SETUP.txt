@@ -1,0 +1,43 @@
+XAMPP MySQL + Django setup
+==========================
+
+1. Open XAMPP Control Panel.
+2. Start Apache.
+3. Start MySQL.
+4. Open phpMyAdmin:
+   http://localhost/phpmyadmin
+5. Create a database named:
+   fashionstore
+6. Use this collation if available:
+   utf8mb4_general_ci
+7. In Command Prompt or PowerShell, go to the project folder:
+   cd "C:\path\to\fashionstore"
+8. Install required Python packages:
+   pip install -r requirements.txt
+9. Create database tables:
+   python manage.py makemigrations
+   python manage.py migrate
+10. Create admin login:
+   python manage.py createsuperuser
+11. Run the website:
+   python manage.py runserver
+12. Open the website:
+   http://127.0.0.1:8000/
+
+Default database settings used by this project:
+
+DB_NAME=fashionstore
+DB_USER=root
+DB_PASSWORD=
+DB_HOST=127.0.0.1
+DB_PORT=3306
+
+If your XAMPP MySQL has a password, set it before running Django:
+
+PowerShell:
+$env:DB_PASSWORD="your_password"
+python manage.py migrate
+
+Command Prompt:
+set DB_PASSWORD=your_password
+python manage.py migrate

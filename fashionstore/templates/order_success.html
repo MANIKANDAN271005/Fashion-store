@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<section class="py-5">
+
+<div class="container text-center">
+
+<i class="fa-solid fa-circle-check text-success"
+style="font-size:90px;"></i>
+
+<h2 class="mt-4">
+
+Thank You!
+
+</h2>
+
+<p>
+
+Your order has been placed successfully.
+
+</p>
+
+<a href="{% url 'shop' %}"
+class="btn btn-dark">
+
+Continue Shopping
+
+</a>
+
+</div>
+
+</section>
+
+{% endblock %}

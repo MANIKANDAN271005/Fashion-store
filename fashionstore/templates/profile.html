@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5">
+
+    <div class="card shadow p-4 ">
+
+        <h2>My Profile</h2>
+
+        <hr>
+
+        <p>
+            Username:
+            {{ request.user.username }}
+        </p>
+
+        <p>
+            Email:
+            {{ request.user.email }}
+        </p>
+
+        <a href="{% url 'logout' %}"
+        class="btn btn-danger">
+            Logout
+        </a>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

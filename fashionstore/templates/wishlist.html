@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Wishlist
+{% endblock %}
+
+{% block content %}
+
+<!-- Banner -->
+
+<section class="shop-banner">
+
+<div class="container text-center">
+
+<h1>My Wishlist</h1>
+
+<p>Save your favorite fashion products</p>
+
+</div>
+
+</section>
+
+<!-- Wishlist -->
+
+<section class="wishlist-page">
+
+<div class="container">
+
+<div class="row">
+
+{% for item in wishlist_items %}
+
+<div class="col-lg-3 col-md-6 mb-4">
+
+<div class="wishlist-card">
+
+<div class="wishlist-image">
+
+{% if item.product.image %}
+    <img src="{{ item.product.image.url }}"
+         alt="{{ item.product.name }}">
+{% else %}
+    <img src="{% static 'images/no-image.png' %}"
+         alt="No Image">
+{% endif %}
+
+<div class="wishlist-icons">
+
+<a href="{% url 'remove_from_wishlist' item.product.id %}"
+   class="text-danger">
+    <i class="fa-solid fa-trash"></i>
+</a>
+
+</div>
+
+</div>
+
+<div class="wishlist-content">
+
+<h5>{{ item.product.name }}</h5>
+
+<div class="rating">
+
+★★★★★
+
+</div>
+
+<div class="price">
+
+₹{{ item.product.price }}
+
+</div>
+
+<a href="{% url 'product_detail' item.product.id %}"
+class="btn btn-outline-dark w-100 mb-2">
+
+View Product
+
+</a>
+
+<a href="{% url 'add_to_cart' item.product.id %}"
+class="btn btn-dark w-100">
+
+Add To Cart
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+{% empty %}
+
+<div class="col-12 text-center">
+
+<div class="col-12 text-center py-5">
+
+<i class="fa-regular fa-heart fa-4x mb-3"></i>
+
+<h3>Your Wishlist is Empty</h3>
+
+<p>
+Start adding your favourite fashion products.
+</p>
+
+<a href="{% url 'shop' %}"
+class="btn btn-dark">
+
+Continue Shopping
+
+</a>
+
+</div>
+
+<p>Add products to your wishlist.</p>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+</section>
+
+{% endblock %}

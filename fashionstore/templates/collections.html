@@ -1,0 +1,936 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Collections | Fashion Store
+{% endblock %}
+
+{% block content %}
+
+<!-- ===================================== -->
+<!-- COLLECTION HERO -->
+<!-- ===================================== -->
+
+<section class="collection-hero py-5">
+
+    <div class="container">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-6">
+
+                <span class="badge bg-dark px-3 py-2 mb-3">
+                    NEW SEASON 2026
+                </span>
+
+                <h1 class="display-4 fw-bold mb-3">
+                    Discover Fashion Collections
+                </h1>
+
+                <p class="lead text-muted mb-4">
+                    Explore carefully curated collections for Men, Women,
+                    Kids and Accessories. Designed to match every season
+                    and every style.
+                </p>
+
+                <div class="d-flex gap-3">
+
+                    <a href="{% url 'shop' %}"
+                       class="btn btn-dark btn-lg">
+
+                        Shop Now
+
+                    </a>
+
+                    <a href="#categories"
+                       class="btn btn-outline-dark btn-lg">
+
+                        Explore Collections
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-6 text-center">
+
+                <img src="{% static 'images/bannerimage9.png' %}"
+                     class="img-fluid"
+                     alt="Fashion Collection">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ===================================== -->
+<!-- BREADCRUMB -->
+<!-- ===================================== -->
+
+<section class="py-3 bg-light">
+
+    <div class="container">
+
+        <nav aria-label="breadcrumb">
+
+            <ol class="breadcrumb mb-0">
+
+                <li class="breadcrumb-item">
+
+                    <a href="{% url 'home' %}">
+
+                        Home
+
+                    </a>
+
+                </li>
+
+                <li class="breadcrumb-item active">
+
+                    Collections
+
+                </li>
+
+            </ol>
+
+        </nav>
+
+    </div>
+
+</section>
+
+<!-- ===================================== -->
+<!-- SHOP BY CATEGORY -->
+<!-- ===================================== -->
+
+<section class="py-5" id="categories">
+
+<div class="container">
+
+<div class="text-center mb-5">
+
+<span class="text-uppercase text-warning fw-semibold">
+
+Browse Categories
+
+</span>
+
+<h2 class="fw-bold mt-2">
+
+Shop By Collection
+
+</h2>
+
+<p class="text-muted">
+
+Choose your favourite fashion collection.
+
+</p>
+
+</div>
+
+<div class="row g-4">
+
+<!-- MEN -->
+
+<div class="col-lg-4 col-md-6">
+
+<div class="category-card">
+
+<img src="{% static 'images/men1.jpg' %}"
+class="img-fluid rounded">
+
+<div class="category-content">
+
+<h3>
+
+Men Collection
+
+</h3>
+
+<p>
+
+Premium Shirts, T-Shirts, Jeans and Shoes.
+
+</p>
+
+<a href="{% url 'shop' %}"
+class="btn btn-dark">
+
+Explore
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- WOMEN -->
+
+<div class="col-lg-4 col-md-6">
+
+<div class="category-card">
+
+<img src="{% static 'images/women2.jpg' %}"
+class="img-fluid rounded">
+
+<div class="category-content">
+
+<h3>
+
+Women Collection
+
+</h3>
+
+<p>
+
+Elegant Dresses, Tops and Fashion Accessories.
+
+</p>
+
+<a href="{% url 'shop' %}"
+class="btn btn-dark">
+
+Explore
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- KIDS -->
+
+<div class="col-lg-4 col-md-6">
+
+<div class="category-card">
+
+<img src="{% static 'images/kids.jpg' %}"
+class="img-fluid rounded">
+
+<div class="category-content">
+
+<h3>
+
+Kids Collection
+
+</h3>
+
+<p>
+
+Comfortable and trendy clothing for kids.
+
+</p>
+
+<a href="{% url 'shop' %}"
+class="btn btn-dark">
+
+Explore
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- SHOES -->
+
+<div class="col-lg-4 col-md-6">
+
+<div class="category-card">
+
+<img src="{% static 'images/shoes3.jpg' %}"
+class="img-fluid rounded">
+
+<div class="category-content">
+
+<h3>
+
+Footwear
+
+</h3>
+
+<p>
+
+Sports Shoes, Sneakers and Premium Collections.
+
+</p>
+
+<a href="{% url 'shop' %}"
+class="btn btn-dark">
+
+Explore
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ACCESSORIES -->
+
+<div class="col-lg-4 col-md-6">
+
+<div class="category-card">
+
+<img src="{% static 'images/Accessories5.jpg' %}"
+class="img-fluid rounded">
+
+<div class="category-content">
+
+<h3>
+
+Accessories
+
+</h3>
+
+<p>
+
+Belts, Caps, Sunglasses and Premium Accessories.
+
+</p>
+
+<a href="{% url 'shop' %}"
+class="btn btn-dark">
+
+Explore
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- WATCHES -->
+
+<div class="col-lg-4 col-md-6">
+
+<div class="category-card">
+
+<img src="{% static 'images/watches3.jpg' %}"
+class="img-fluid rounded">
+
+<div class="category-content">
+
+<h3>
+
+Watches
+
+</h3>
+
+<p>
+
+Luxury Watches and Smart Wear Collections.
+
+</p>
+
+<a href="{% url 'shop' %}"
+class="btn btn-dark">
+
+Explore
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ===================================== -->
+<!-- SEASONAL COLLECTIONS -->
+<!-- ===================================== -->
+
+<section class="season-collections py-5 bg-light">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <span class="text-warning fw-semibold">
+                TRENDING NOW
+            </span>
+
+            <h2 class="fw-bold mt-2">
+                Seasonal Collections
+            </h2>
+
+            <p class="text-muted">
+                Discover the latest fashion trends curated for every season.
+            </p>
+
+        </div>
+
+        <div class="row g-4">
+
+            <!-- Summer -->
+
+            <div class="col-lg-6">
+
+                <div class="season-card">
+
+                    <img src="{% static 'images/Light&FreshStyles.jpg' %}"
+                         class="img-fluid rounded">
+
+                    <div class="season-content">
+
+                        <span>SUMMER 2026</span>
+
+                        <h3>Light & Fresh Styles</h3>
+
+                        <p>
+                            Breathable fabrics, bright colours and
+                            comfortable everyday fashion.
+                        </p>
+
+                        <a href="{% url 'shop' %}"
+                           class="btn btn-warning">
+
+                            Explore
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Winter -->
+
+            <div class="col-lg-6">
+
+                <div class="season-card">
+
+                    <img src="{% static 'images/Warm&Elegant.jpg' %}"
+                         class="img-fluid rounded">
+
+                    <div class="season-content">
+
+                        <span>WINTER 2026</span>
+
+                        <h3>Warm & Elegant</h3>
+
+                        <p>
+                            Jackets, hoodies and premium winter essentials.
+                        </p>
+
+                        <a href="{% url 'shop' %}"
+                           class="btn btn-warning">
+
+                            Explore
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Festive -->
+
+            <div class="col-lg-6">
+
+                <div class="season-card">
+
+                    <img src="{% static 'images/CelebrateinStyle.jpg' %}"
+                         class="img-fluid rounded">
+
+                    <div class="season-content">
+
+                        <span>FESTIVE COLLECTION</span>
+
+                        <h3>Celebrate in Style</h3>
+
+                        <p>
+                            Premium outfits for weddings,
+                            festivals and special occasions.
+                        </p>
+
+                        <a href="{% url 'shop' %}"
+                           class="btn btn-warning">
+
+                            Explore
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Sports -->
+
+            <div class="col-lg-6">
+
+                <div class="season-card">
+
+                    <img src="{% static 'images/MoveWithConfidence.jpg' %}"
+                         class="img-fluid rounded">
+
+                    <div class="season-content">
+
+                        <span>SPORTS COLLECTION</span>
+
+                        <h3>Move With Confidence</h3>
+
+                        <p>
+                            Sportswear, sneakers and active lifestyle fashion.
+                        </p>
+
+                        <a href="{% url 'shop' %}"
+                           class="btn btn-warning">
+
+                            Explore
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ===================================== -->
+<!-- FEATURED BRANDS -->
+<!-- ===================================== -->
+
+<section class="featured-brands py-5">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <span class="text-warning fw-semibold">
+                OUR BRANDS
+            </span>
+
+            <h2 class="fw-bold mt-2">
+                Trusted Fashion Brands
+            </h2>
+
+            <p class="text-muted">
+                Shop products from the world's leading fashion brands.
+            </p>
+
+        </div>
+
+        <div class="row text-center g-4">
+
+            <div class="col-lg-2 col-md-4 col-6">
+
+                <div class="brand-card">
+
+                    <img src="{% static 'images/nike.png' %}"
+                         class="img-fluid">
+
+                    <h6 class="mt-3">
+                        Nike
+                    </h6>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-6">
+
+                <div class="brand-card">
+
+                    <img src="{% static 'images/adidas.png' %}"
+                         class="img-fluid">
+
+                    <h6 class="mt-3">
+                        Adidas
+                    </h6>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-6">
+
+                <div class="brand-card">
+
+                    <img src="{% static 'images/puma.png' %}"
+                         class="img-fluid">
+
+                    <h6 class="mt-3">
+                        Puma
+                    </h6>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-6">
+
+                <div class="brand-card">
+
+                    <img src="{% static 'images/levis.png' %}"
+                         class="img-fluid">
+
+                    <h6 class="mt-3">
+                        Levi's
+                    </h6>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-6">
+
+                <div class="brand-card">
+
+                    <img src="{% static 'images/zara.png' %}"
+                         class="img-fluid">
+
+                    <h6 class="mt-3">
+                        Zara
+                    </h6>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-6">
+
+                <div class="brand-card">
+
+                    <img src="{% static 'images/h&m.png' %}"
+                         class="img-fluid">
+
+                    <h6 class="mt-3">
+                        H&M
+                    </h6>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ===================================== -->
+<!-- PROMOTIONAL BANNER -->
+<!-- ===================================== -->
+
+<section class="promo-banner py-5">
+
+    <div class="container">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-7">
+
+                <span class="text-warning fw-bold">
+
+                    LIMITED TIME OFFER
+
+                </span>
+
+                <h2 class="display-5 fw-bold mt-3">
+
+                    Flat 50% OFF On Selected Collections
+
+                </h2>
+
+                <p class="lead text-light">
+
+                    Refresh your wardrobe with premium fashion for Men,
+                    Women and Kids. Enjoy exclusive discounts for a
+                    limited time.
+
+                </p>
+
+                <a href="{% url 'shop' %}"
+                   class="btn btn-warning btn-lg mt-3">
+
+                    Shop Now
+
+                </a>
+
+            </div>
+
+            <div class="col-lg-5 text-center">
+
+                <img src="{% static 'images/bannerimage7.jpg' %}"
+                     class="img-fluid rounded"
+                     alt="Sale Banner">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ===================================== -->
+<!-- WHY OUR COLLECTIONS -->
+<!-- ===================================== -->
+
+<section class="py-5">
+
+<div class="container">
+
+<div class="text-center mb-5">
+
+<span class="text-warning fw-semibold">
+
+WHY CHOOSE US
+
+</span>
+
+<h2 class="fw-bold mt-2">
+
+Premium Fashion Experience
+
+</h2>
+
+<p class="text-muted">
+
+Everything you need for a better shopping experience.
+
+</p>
+
+</div>
+
+<div class="row g-4">
+
+<div class="col-lg-3 col-md-6">
+
+<div class="service-box text-center p-4">
+
+<i class="fa-solid fa-shirt fa-3x mb-3 text-warning"></i>
+
+<h5>
+
+Latest Trends
+
+</h5>
+
+<p>
+
+New collections updated every season.
+
+</p>
+
+</div>
+
+</div>
+
+<div class="col-lg-3 col-md-6">
+
+<div class="service-box text-center p-4">
+
+<i class="fa-solid fa-truck-fast fa-3x mb-3 text-warning"></i>
+
+<h5>
+
+Fast Delivery
+
+</h5>
+
+<p>
+
+Quick delivery across India.
+
+</p>
+
+</div>
+
+</div>
+
+<div class="col-lg-3 col-md-6">
+
+<div class="service-box text-center p-4">
+
+<i class="fa-solid fa-rotate-left fa-3x mb-3 text-warning"></i>
+
+<h5>
+
+Easy Returns
+
+</h5>
+
+<p>
+
+7-day hassle-free return policy.
+
+</p>
+
+</div>
+
+</div>
+
+<div class="col-lg-3 col-md-6">
+
+<div class="service-box text-center p-4">
+
+<i class="fa-solid fa-shield-halved fa-3x mb-3 text-warning"></i>
+
+<h5>
+
+Secure Shopping
+
+</h5>
+
+<p>
+
+100% safe and secure payment.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ===================================== -->
+<!-- STORE STATISTICS -->
+<!-- ===================================== -->
+
+<section class="py-5 bg-dark text-white">
+
+<div class="container">
+
+<div class="row text-center">
+
+<div class="col-lg-3 col-6 mb-4">
+
+<h2 class="fw-bold">
+
+25K+
+
+</h2>
+
+<p>
+
+Happy Customers
+
+</p>
+
+</div>
+
+<div class="col-lg-3 col-6 mb-4">
+
+<h2 class="fw-bold">
+
+500+
+
+</h2>
+
+<p>
+
+Fashion Products
+
+</p>
+
+</div>
+
+<div class="col-lg-3 col-6 mb-4">
+
+<h2 class="fw-bold">
+
+50+
+
+</h2>
+
+<p>
+
+Premium Brands
+
+</p>
+
+</div>
+
+<div class="col-lg-3 col-6 mb-4">
+
+<h2 class="fw-bold">
+
+10K+
+
+</h2>
+
+<p>
+
+Orders Delivered
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ===================================== -->
+<!-- CALL TO ACTION -->
+<!-- ===================================== -->
+
+<section class="py-5">
+
+<div class="container text-center">
+
+<h2 class="fw-bold mb-3">
+
+Ready To Upgrade Your Style?
+
+</h2>
+
+<p class="text-muted mb-4">
+
+Browse our premium collections and discover your next favourite outfit.
+
+</p>
+
+<a href="{% url 'shop' %}"
+   class="btn btn-dark btn-lg px-5">
+
+Start Shopping
+
+</a>
+
+</div>
+
+</section>
+
+{% endblock %}

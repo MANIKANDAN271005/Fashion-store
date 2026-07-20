@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+
+Shopping Cart
+
+{% endblock %}
+
+{% block content %}
+
+<!-- Cart Banner -->
+
+<section class="shop-banner">
+
+<div class="container text-center">
+
+<h1>
+
+Shopping Cart
+
+</h1>
+
+<p>
+
+Review your selected products
+
+</p>
+
+</div>
+
+</section>
+
+<!-- Cart -->
+
+<section class="cart-page">
+
+<div class="container">
+
+<div class="row">
+
+<!-- LEFT -->
+
+<div class="col-lg-8">
+
+<div class="cart-box">
+
+<table class="table align-middle">
+
+<thead>
+
+<tr>
+
+<th>Product</th>
+
+<th>Price</th>
+
+<th>Quantity</th>
+
+<th>Total</th>
+
+<th></th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for item in cart_items %}
+
+<tr>
+
+    <td>
+
+        {% if item.product.image %}
+            <img src="{{ item.product.image.url }}"
+                 width="80">
+        {% endif %}
+
+    </td>
+
+    <td>
+
+        {{ item.product.name }}
+
+    </td>
+
+    <td>
+
+        ₹{{ item.product.price }}
+
+    </td>
+
+    <td>
+
+        <a href="{% url 'decrease_cart' item.id %}"
+           class="btn btn-sm btn-outline-dark">
+
+            -
+
+        </a>
+
+        <strong class="mx-2">
+
+            {{ item.quantity }}
+
+        </strong>
+
+        <a href="{% url 'increase_cart' item.id %}"
+           class="btn btn-sm btn-outline-dark">
+
+            +
+
+        </a>
+
+    </td>
+
+    <td>
+
+        ₹{{ item.product.price|floatformat:2 }}
+
+    </td>
+
+    <td>
+
+        <a href="{% url 'remove_cart_item' item.id %}"
+           class="btn btn-danger">
+
+            Remove
+
+        </a>
+
+    </td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+    <td colspan="6">
+
+        Cart is Empty
+
+    </td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<!-- RIGHT -->
+
+<div class="col-lg-4">
+
+<div class="summary-box">
+
+<h3>
+
+Order Summary
+
+</h3>
+
+<hr>
+
+<div class="summary-row">
+
+<span>
+
+Subtotal
+
+</span>
+
+<strong>
+
+₹{{ subtotal }}
+
+</strong>
+
+</div>
+
+<div class="summary-row">
+
+<span>
+
+Shipping
+
+</span>
+
+<strong>
+
+₹100
+
+</strong>
+
+</div>
+
+<div class="summary-row">
+
+<span>
+
+Discount
+
+</span>
+
+<strong>
+
+-₹0
+
+</strong>
+
+</div>
+
+<hr>
+
+<div class="summary-total">
+
+<span>
+
+Total
+
+</span>
+
+<strong>
+
+₹{{ grand_total }}
+
+</strong>
+
+</div>
+
+<input
+
+type="text"
+
+class="form-control mt-4"
+
+placeholder="Coupon Code">
+
+<button
+
+class="btn btn-dark w-100 mt-3">
+
+Apply Coupon
+
+</button>
+
+<a
+
+href="{% url 'checkout' %}"
+
+class="btn btn-warning w-100 mt-3">
+
+Proceed to Checkout
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+{% endblock %}

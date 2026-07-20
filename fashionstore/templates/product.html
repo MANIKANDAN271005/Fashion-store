@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Products{% endblock %}
+
+{% block content %}
+
+<!-- Banner -->
+<section class="products-banner">
+
+<div class="container text-center">
+
+<h1>Our Collection</h1>
+
+<p>Premium Fashion for Everyone</p>
+
+</div>
+
+</section>
+
+<div class="container my-5">
+
+<div class="row">
+
+<!-- Sidebar -->
+
+<div class="col-lg-3">
+
+<div class="filter-box">
+
+<h4>Categories</h4>
+
+<hr>
+
+<a href="#" class="category-link">All Products</a>
+
+<a href="#" class="category-link">Men</a>
+
+<a href="#" class="category-link">Women</a>
+
+<a href="#" class="category-link">Kids</a>
+
+<a href="#" class="category-link">Shoes</a>
+
+<a href="#" class="category-link">Accessories</a>
+
+</div>
+
+</div>
+
+<!-- Products -->
+
+<div class="col-lg-9">
+
+<div class="d-flex justify-content-between mb-4 flex-wrap">
+
+<input
+
+type="text"
+
+class="form-control search-box"
+
+placeholder="Search Products..."
+
+>
+
+<select class="form-select sort-box">
+
+<option>Newest</option>
+
+<option>Price Low to High</option>
+
+<option>Price High to Low</option>
+
+<option>Popular</option>
+
+</select>
+
+</div>
+
+<div class="row">
+
+{% for product in products %}
+
+<div class="col-lg-4 col-md-6 mb-4">
+
+<div class="product-card">
+
+{% if product.image %}
+
+<img src="{{ product.image.url }}">
+
+{% else %}
+
+<img src="{% static 'images/no-image.png' %}">
+
+{% endif %}
+
+<div class="product-info">
+
+    <h5>{{ product.name }}</h5>
+
+    <p class="text-muted">
+        Category: {{ product.category.name }}
+    </p>
+
+    <p>{{ product.description|truncatewords:12 }}</p>
+
+    <div class="price">
+        ₹{{ product.price }}
+    </div>
+
+    <div class="buttons">
+
+        <a href="{% url 'product_detail' product.id %}" class="btn btn-dark">
+            View
+        </a>
+
+        <a href="{% url 'add_to_cart' product.id %}" class="btn btn-warning">
+            Cart
+        </a>
+
+    </div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+<nav>
+
+<ul class="pagination justify-content-center mt-4">
+
+<li class="page-item">
+
+<a class="page-link" href="#">Previous</a>
+
+</li>
+
+<li class="page-item active">
+
+<a class="page-link" href="#">1</a>
+
+</li>
+
+<li class="page-item">
+
+<a class="page-link" href="#">2</a>
+
+</li>
+
+<li class="page-item">
+
+<a class="page-link" href="#">3</a>
+
+</li>
+
+<li class="page-item">
+
+<a class="page-link" href="#">Next</a>
+
+</li>
+
+</ul>
+
+</nav>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}
