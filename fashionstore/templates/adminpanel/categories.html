@@ -1,0 +1,76 @@
+{% extends 'adminpanel/base_admin.html' %}
+
+{% block title %}Categories{% endblock %}
+
+{% block admin_content %}
+
+<div class="admin-page-header">
+    <div>
+        <h1>Categories</h1>
+        <p>{{ categories.count }} categor{{ categories.count|pluralize:"y,ies" }}.</p>
+    </div>
+</div>
+
+<div class="admin-card">
+
+    <h3>Add Category</h3>
+
+    <form method="POST" action="{% url 'admin_category_add' %}" class="d-flex gap-2 flex-wrap">
+        {% csrf_token %}
+        <input type="text" name="name" class="form-control" style="max-width:320px;" placeholder="Category name" required>
+        <button type="submit" class="btn btn-dark">
+            <i class="fa-solid fa-plus"></i> Add
+        </button>
+    </form>
+
+</div>
+
+<div class="admin-card">
+
+    <h3>All Categories</h3>
+
+    {% if categories %}
+    <div class="table-responsive">
+        <table class="table admin-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Products</th>
+                    <th style="width:40%;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cat in categories %}
+                <tr>
+                    <td style="width:40%;">
+                        <form id="cat-edit-{{ cat.id }}" method="POST" action="{% url 'admin_category_edit' cat.id %}">
+                            {% csrf_token %}
+                            <input type="text" name="name" form="cat-edit-{{ cat.id }}"
+                                   class="form-control form-control-sm" value="{{ cat.name }}" required>
+                        </form>
+                    </td>
+                    <td>{{ cat.product_count }}</td>
+                    <td class="text-nowrap">
+                        <button type="submit" form="cat-edit-{{ cat.id }}" class="btn btn-sm btn-outline-dark">Save</button>
+                        <form method="POST" action="{% url 'admin_category_delete' cat.id %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-danger delete-btn">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="admin-empty">
+        <i class="fa-solid fa-tags"></i>
+        <p>No categories yet. Add one above to get started.</p>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

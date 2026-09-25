@@ -1,87 +1,75 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}My Orders | Fashion Store{% endblock %}
 
 {% block content %}
-<section class="page-banner">
+
+<section class="page-hero">
     <div class="container">
-        <span class="eyebrow">Orders</span>
-        <h1>My orders</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Orders</li>
+            </ol>
+        </nav>
+        <h1>My Orders</h1>
         <p>Track recent purchases and delivery status.</p>
     </div>
 </section>
 
-<section class="cart-container section-padding">
+<section class="section">
+
     <div class="container">
-        <div class="table-responsive">
-            <table class="cart-table">
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Product</th>
-                        <th>Status</th>
-                        <th>Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
 
-{% if orders %}
+        {% if orders %}
 
-    {% for order in orders %}
-
-    <tr>
-
-        <td>#{{ order.id }}</td>
-
-        <td>
-
-            {% for item in order.items.all %}
-
-                {{ item.product.name }}
-
-                {% if not forloop.last %}, {% endif %}
-
-            {% endfor %}
-
-        </td>
-
-        <td>
-
-            <span class="status-pill">
-
-                {{ order.status }}
-
-            </span>
-
-        </td>
-
-        <td>
-
-            ₹{{ order.total_price }}
-
-        </td>
-
-    </tr>
-
-    {% endfor %}
-
-{% else %}
-
-<tr>
-
-    <td colspan="4" class="text-center">
-
-        No Orders Found
-
-    </td>
-
-</tr>
-
-{% endif %}
-
-</tbody>
-            </table>
+        <div class="table-card">
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Order</th>
+                            <th class="d-none d-md-table-cell">Date</th>
+                            <th class="d-none d-md-table-cell">Products</th>
+                            <th>Status</th>
+                            <th class="text-end">Amount</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td class="fw-semibold">#{{ order.id }}</td>
+                            <td class="d-none d-md-table-cell text-nowrap text-muted">{{ order.ordered_at|date:"d M Y" }}</td>
+                            <td class="d-none d-md-table-cell" style="min-width:200px;">
+                                {% for item in order.items.all %}{{ item.product.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                            </td>
+                            <td><span class="status-pill status-{{ order.status|lower }}">{{ order.status }}</span></td>
+                            <td class="text-end fw-semibold text-nowrap">₹{{ order.total_price }}</td>
+                            <td class="text-end">
+                                <a href="{% url 'order_detail' order.id %}" class="btn btn-sm btn-outline-dark">View</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
+
+        {% else %}
+
+        <div class="empty-state">
+            <i class="fa-solid fa-box-open"></i>
+            <h3>No orders yet</h3>
+            <p>When you place an order it will show up here so you can track it.</p>
+            <a href="{% url 'shop' %}" class="btn btn-dark">Start Shopping</a>
+        </div>
+
+        {% endif %}
+
     </div>
+
 </section>
+
 {% endblock %}

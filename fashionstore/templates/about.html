@@ -5,29 +5,31 @@
 
 {% block content %}
 
-<!-- Page Header -->
-<section class="bg-dark text-white py-5">
-    <div class="container text-center">
-        <h1 class="display-4 fw-bold">About Fashion Store</h1>
-        <p class="lead">
-            Discover the latest fashion trends with premium quality and affordable prices.
-        </p>
+<section class="page-hero text-center">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">About</li>
+            </ol>
+        </nav>
+        <h1>About Fashion Store</h1>
+        <p>Discover the latest fashion trends with premium quality and affordable prices.</p>
     </div>
 </section>
 
 <!-- About Section -->
-<section class="py-5">
+<section class="section bg-surface">
     <div class="container">
-        <div class="row align-items-center">
+        <div class="row align-items-center g-4 g-lg-5">
 
-            <div class="col-lg-6 mb-4">
-                <img src="{% static 'images/about.jpg' %}"
-                     class="img-fluid rounded shadow"
-                     alt="About Fashion Store">
+            <div class="col-lg-6">
+                <img src="{% static 'images/shopmodel1.png' %}" class="about-img" alt="Inside the Fashion Store boutique">
             </div>
 
             <div class="col-lg-6">
-                <h2 class="fw-bold mb-3">Who We Are</h2>
+                <span class="eyebrow">Our Story</span>
+                <h2 class="mb-3">Who We Are</h2>
 
                 <p class="text-muted">
                     Fashion Store is an online shopping platform that provides
@@ -46,10 +48,7 @@
                     to help our customers stay fashionable all year round.
                 </p>
 
-                <a href="{% url 'collections' %}" class="btn btn-primary mt-3">
-                    Shop Now
-                </a>
-
+                <a href="{% url 'collections' %}" class="btn btn-dark mt-2">Shop Now</a>
             </div>
 
         </div>
@@ -57,79 +56,45 @@
 </section>
 
 <!-- Features -->
-<section class="bg-light py-5">
+<section class="section">
     <div class="container">
 
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">Why Choose Us?</h2>
-            <p class="text-muted">
-                We provide the best shopping experience.
-            </p>
+        <div class="section-head">
+            <h2 class="section-title">Why Choose Us?</h2>
+            <p class="section-sub">We provide the best shopping experience.</p>
         </div>
 
-        <div class="row text-center">
+        <div class="row g-3 g-md-4">
 
-            <div class="col-md-3 mb-4">
-                <div class="card border-0 shadow h-100">
-                    <div class="card-body">
-
-                        <i class="fas fa-shipping-fast fa-3x text-primary mb-3"></i>
-
-                        <h5>Fast Delivery</h5>
-
-                        <p class="text-muted">
-                            Quick and secure delivery across the country.
-                        </p>
-
-                    </div>
+            <div class="col-6 col-lg-3">
+                <div class="feature-box">
+                    <i class="fa-solid fa-truck-fast"></i>
+                    <h5>Fast Delivery</h5>
+                    <p>Quick and secure delivery across the country.</p>
                 </div>
             </div>
 
-            <div class="col-md-3 mb-4">
-                <div class="card border-0 shadow h-100">
-                    <div class="card-body">
-
-                        <i class="fas fa-tags fa-3x text-success mb-3"></i>
-
-                        <h5>Best Prices</h5>
-
-                        <p class="text-muted">
-                            Affordable prices with exciting offers.
-                        </p>
-
-                    </div>
+            <div class="col-6 col-lg-3">
+                <div class="feature-box">
+                    <i class="fa-solid fa-tags"></i>
+                    <h5>Best Prices</h5>
+                    <p>Affordable prices with exciting offers.</p>
                 </div>
             </div>
 
-            <div class="col-md-3 mb-4">
-                <div class="card border-0 shadow h-100">
-                    <div class="card-body">
-
-                        <i class="fas fa-lock fa-3x text-danger mb-3"></i>
-
-                        <h5>Secure Payment</h5>
-
-                        <p class="text-muted">
-                            Safe and encrypted online payment methods.
-                        </p>
-
-                    </div>
+            <div class="col-6 col-lg-3">
+                <div class="feature-box">
+                    <i class="fa-solid fa-lock"></i>
+                    <h5>Secure Payment</h5>
+                    <p>Safe and encrypted online payment methods.</p>
                 </div>
             </div>
 
-            <div class="col-md-3 mb-4">
-                <div class="card border-0 shadow h-100">
-                    <div class="card-body">
-
-                        <i class="fas fa-headset fa-3x text-warning mb-3"></i>
-
-                        <h5>24/7 Support</h5>
-
-                        <p class="text-muted">
-                            Friendly customer support anytime.
-                        </p>
-
-                    </div>
+            <div class="col-6 col-lg-3">
+                <div class="feature-box">
+                    <i class="fa-solid fa-headset"></i>
+                    <h5>24/7 Support</h5>
+                    <p>Friendly customer support anytime.</p>
                 </div>
             </div>
 
@@ -139,69 +104,43 @@
 </section>
 
 <!-- Team -->
-<section class="py-5">
+<section class="section bg-surface">
     <div class="container">
 
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">Meet Our Team</h2>
-            <p class="text-muted">
-                Passionate professionals behind Fashion Store.
-            </p>
+        <div class="section-head">
+            <h2 class="section-title">Meet Our Team</h2>
+            <p class="section-sub">Passionate professionals behind Fashion Store.</p>
         </div>
 
-        <div class="row">
+        <div class="row g-4">
 
-            <div class="col-md-4 mb-4">
-                <div class="card shadow border-0 text-center">
-
-                    <img src="{% static 'images/team1.jpg' %}"
-                         class="card-img-top"
-                         alt="Founder">
-
-                    <div class="card-body">
-
-                        <h5 class="fw-bold">John Smith</h5>
-
-                        <p class="text-primary">Founder & CEO</p>
-
+            <div class="col-md-4">
+                <div class="team-card">
+                    <img src="{% static 'images/team1.jpg' %}" alt="John Smith" loading="lazy">
+                    <div class="team-card__body">
+                        <h5>John Smith</h5>
+                        <p>Founder &amp; CEO</p>
                     </div>
-
                 </div>
             </div>
 
-            <div class="col-md-4 mb-4">
-                <div class="card shadow border-0 text-center">
-
-                    <img src="{% static 'images/team2.jpg' %}"
-                         class="card-img-top"
-                         alt="Manager">
-
-                    <div class="card-body">
-
-                        <h5 class="fw-bold">Sophia Johnson</h5>
-
-                        <p class="text-primary">Marketing Manager</p>
-
+            <div class="col-md-4">
+                <div class="team-card">
+                    <img src="{% static 'images/team2.jpg' %}" alt="Sophia Johnson" loading="lazy">
+                    <div class="team-card__body">
+                        <h5>Sophia Johnson</h5>
+                        <p>Marketing Manager</p>
                     </div>
-
                 </div>
             </div>
 
-            <div class="col-md-4 mb-4">
-                <div class="card shadow border-0 text-center">
-
-                    <img src="{% static 'images/team3.jpg' %}"
-                         class="card-img-top"
-                         alt="Developer">
-
-                    <div class="card-body">
-
-                        <h5 class="fw-bold">David Wilson</h5>
-
-                        <p class="text-primary">Web Developer</p>
-
+            <div class="col-md-4">
+                <div class="team-card">
+                    <img src="{% static 'images/team3.jpg' %}" alt="David Wilson" loading="lazy">
+                    <div class="team-card__body">
+                        <h5>David Wilson</h5>
+                        <p>Web Developer</p>
                     </div>
-
                 </div>
             </div>
 
@@ -211,52 +150,23 @@
 </section>
 
 <!-- Statistics -->
-<section class="bg-primary text-white py-5">
+<section class="stats-band">
     <div class="container">
-
-        <div class="row text-center">
-
-            <div class="col-md-3">
-                <h2 class="fw-bold">10K+</h2>
-                <p>Happy Customers</p>
-            </div>
-
-            <div class="col-md-3">
-                <h2 class="fw-bold">500+</h2>
-                <p>Products</p>
-            </div>
-
-            <div class="col-md-3">
-                <h2 class="fw-bold">50+</h2>
-                <p>Brands</p>
-            </div>
-
-            <div class="col-md-3">
-                <h2 class="fw-bold">24/7</h2>
-                <p>Customer Support</p>
-            </div>
-
+        <div class="row text-center gy-4">
+            <div class="col-6 col-md-3"><h2>10K+</h2><p>Happy Customers</p></div>
+            <div class="col-6 col-md-3"><h2>500+</h2><p>Products</p></div>
+            <div class="col-6 col-md-3"><h2>50+</h2><p>Brands</p></div>
+            <div class="col-6 col-md-3"><h2>24/7</h2><p>Customer Support</p></div>
         </div>
-
     </div>
 </section>
 
 <!-- Call to Action -->
-<section class="py-5">
+<section class="section">
     <div class="container text-center">
-
-        <h2 class="fw-bold mb-3">
-            Ready to Explore Fashion?
-        </h2>
-
-        <p class="text-muted">
-            Browse our latest collections and enjoy premium shopping.
-        </p>
-
-        <a href="{% url 'collections' %}" class="btn btn-primary btn-lg">
-            Explore Collection
-        </a>
-
+        <h2 class="mb-3">Ready to Explore Fashion?</h2>
+        <p class="text-muted mb-4">Browse our latest collections and enjoy premium shopping.</p>
+        <a href="{% url 'collections' %}" class="btn btn-dark btn-lg">Explore Collection</a>
     </div>
 </section>
 

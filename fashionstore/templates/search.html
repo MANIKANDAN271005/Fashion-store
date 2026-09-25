@@ -1,97 +1,90 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Search Products{% endblock %}
+{% block title %}{% if query %}"{{ query }}" | {% endif %}Search | Fashion Store{% endblock %}
 
 {% block content %}
 
-<section class="search-page py-5">
+<section class="page-hero">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'shop' %}">Shop</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Search</li>
+            </ol>
+        </nav>
+        <h1>{% if query %}Results for "{{ query }}"{% else %}Search Products{% endif %}</h1>
+        <p>{% if query %}{{ products|length }} product{{ products|length|pluralize }} found{% else %}Type a product name, category or style to get started.{% endif %}</p>
+    </div>
+</section>
+
+<section class="section" id="shopProducts">
 
     <div class="container">
 
-        <div class="text-center mb-5">
+        <div class="row g-4">
 
-            <h2>Search Products</h2>
-
-            <p>Find your favourite fashion products.</p>
-
-        </div>
-
-        <form method="GET" action="{% url 'search' %}" class="mb-5">
-
-            <div class="row justify-content-center">
-
-                <div class="col-md-8">
-
-                    <div class="input-group">
-
-                        <input
-                            type="text"
-                            name="q"
-                            class="form-control"
-                            placeholder="Search products..."
-                            value="{{ request.GET.q }}"
-                        >
-
-                        <button class="btn btn-dark" type="submit">
-
-                            Search
-
-                        </button>
-
-                    </div>
-
-                </div>
-
+            <div class="col-lg-3">
+                {% include 'partials/shop_filters.html' %}
             </div>
 
-        </form>
+            <div class="col-lg-9">
 
-        <div class="row">
+                {% if query %}
 
-            {% for product in products %}
+                    {% if products %}
 
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    {% include 'partials/shop_toolbar.html' %}
 
-                <div class="product-card">
+                    <div class="row g-3 g-md-4">
+                        {% for product in products %}
+                        <div class="col-6 col-md-4">
+                            {% include 'partials/product_card.html' with product=product %}
+                        </div>
+                        {% endfor %}
+                    </div>
 
-                    {% if product.image %}
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
                     {% else %}
-                    <img src="{% static 'images/no-image.png' %}" alt="No Image">
+
+                    <div class="empty-state">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <h3>No products found</h3>
+                        <p>
+                            We couldn't find anything matching <strong>"{{ query }}"</strong>
+                            {% if selected_category or selected_price %} with the selected filters{% endif %}.
+                            Check the spelling, try a more general word, or browse a category:
+                        </p>
+                        <div class="suggestion-list">
+                            {% for cat in categories %}
+                            <a href="{% url 'shop' %}?category={{ cat.name|urlencode }}" class="chip">{{ cat.name }}</a>
+                            {% endfor %}
+                        </div>
+                        <a href="{% url 'shop' %}" class="btn btn-dark">Browse All Products</a>
+                    </div>
+
                     {% endif %}
 
-                    <div class="product-content">
+                {% else %}
 
-                        <h5>{{ product.name }}</h5>
-
-                        <p class="price">₹ {{ product.price }}</p>
-
-                        <a href="{% url 'product_detail' product.id %}" class="btn btn-dark">
-
-                            View Details
-
-                        </a>
-
+                <div class="empty-state">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <h3>What are you looking for?</h3>
+                    <p>Search by product name, description or category &mdash; for example "shirt", "watch" or "kids".</p>
+                    <form action="{% url 'search' %}" method="GET" class="newsletter-form mb-4" role="search">
+                        <input type="search" name="q" class="form-control border" placeholder="Search products..." aria-label="Search products" autofocus>
+                        <button type="submit" class="btn btn-dark">Search</button>
+                    </form>
+                    <div class="suggestion-list mb-0">
+                        {% for cat in categories %}
+                        <a href="{% url 'shop' %}?category={{ cat.name|urlencode }}" class="chip">{{ cat.name }}</a>
+                        {% endfor %}
                     </div>
-
                 </div>
 
-            </div>
-
-            {% empty %}
-
-            <div class="col-12">
-
-                <div class="alert alert-warning text-center">
-
-                    No products found.
-
-                </div>
+                {% endif %}
 
             </div>
-
-            {% endfor %}
 
         </div>
 

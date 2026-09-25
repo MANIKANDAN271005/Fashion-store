@@ -1,140 +1,103 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Order Details{% endblock %}
+{% block title %}Order #{{ order.id }} | Fashion Store{% endblock %}
 
 {% block content %}
 
-<section class="order-detail py-5">
+<section class="page-hero">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'orders' %}">Orders</a></li>
+                <li class="breadcrumb-item active" aria-current="page">#{{ order.id }}</li>
+            </ol>
+        </nav>
+        <div class="d-flex flex-wrap align-items-center gap-3">
+            <h1 class="mb-0">Order #{{ order.id }}</h1>
+            <span class="status-pill status-{{ order.status|lower }}">{{ order.status }}</span>
+        </div>
+        <p class="mt-2">Placed on {{ order.ordered_at|date:"d M Y, h:i A" }}</p>
+    </div>
+</section>
+
+<section class="section">
 
     <div class="container">
 
-        <div class="text-center mb-5">
-            <h2>Order Details</h2>
-            <p>View your complete order information</p>
+        <div class="row g-4 mb-4">
+
+            <div class="col-md-6">
+                <div class="panel h-100">
+                    <h3 class="panel-title">Delivery Details</h3>
+                    <dl class="detail-list">
+                        <div><dt>Name</dt><dd>{{ order.full_name|default:order.user.username }}</dd></div>
+                        <div><dt>Phone</dt><dd>{{ order.phone }}</dd></div>
+                        <div><dt>Address</dt><dd>{{ order.address }}, {{ order.city }}, {{ order.state }} {{ order.pincode }}</dd></div>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="panel h-100">
+                    <h3 class="panel-title">Order Information</h3>
+                    <dl class="detail-list">
+                        <div><dt>Order ID</dt><dd>#{{ order.id }}</dd></div>
+                        <div><dt>Customer</dt><dd>{{ order.user.email|default:order.user.username }}</dd></div>
+                        <div><dt>Payment</dt><dd>{{ order.get_payment_method_display }}</dd></div>
+                        <div><dt>Total</dt><dd>₹{{ order.total_price }}</dd></div>
+                    </dl>
+                </div>
+            </div>
+
         </div>
 
-        <div class="card shadow border-0">
-
-            <div class="card-header bg-dark text-white">
-
-                <div class="row">
-
-                    <div class="col-md-6">
-                        <h4>Order #{{ order.id }}</h4>
-                    </div>
-
-                    <div class="col-md-6 text-md-end">
-                        <strong>Status :</strong>
-                        <span class="badge bg-success">
-                            {{ order.status }}
-                        </span>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <div class="row mb-4">
-
-                    <div class="col-md-6">
-
-                        <h5>Customer Details</h5>
-
-                        <hr>
-
-                        <p><strong>Name :</strong> {{ order.user.username }}</p>
-
-                        <p><strong>Email :</strong> {{ order.user.email }}</p>
-
-                    </div>
-
-                    <div class="col-md-6">
-
-                        <h5>Order Information</h5>
-
-                        <hr>
-
-                        <p><strong>Order ID :</strong> {{ order.id }}</p>
-
-                        <p><strong>Date :</strong> {{ order.created_at }}</p>
-
-                        <p><strong>Total :</strong> ₹ {{ order.total }}</p>
-
-                    </div>
-
-                </div>
-
-                <h5>Ordered Products</h5>
-
-                <hr>
-
-                <table class="table table-bordered table-hover">
-
-                    <thead class="table-dark">
-
+        <div class="table-card">
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
                         <tr>
-
                             <th>Product</th>
-
-                            <th>Price</th>
-
-                            <th>Quantity</th>
-
-                            <th>Total</th>
-
+                            <th class="text-end">Price</th>
+                            <th class="text-center">Qty</th>
+                            <th class="text-end">Total</th>
                         </tr>
-
                     </thead>
-
                     <tbody>
-
                     {% for item in items %}
-
                         <tr>
-
-                            <td>{{ item.product.name }}</td>
-
-                            <td>₹ {{ item.product.price }}</td>
-
-                            <td>{{ item.quantity }}</td>
-
-                            <td>₹ {{ item.quantity|floatformat:0|add:"0" }}</td>
-
-                        </tr>
-
-                    {% empty %}
-
-                        <tr>
-
-                            <td colspan="4" class="text-center">
-                                No products found.
+                            <td style="min-width:220px;">
+                                <div class="d-flex align-items-center gap-3">
+                                    <img class="table-thumb"
+                                         src="{% if item.product.image %}{{ item.product.image.url }}{% else %}{% static 'images/placeholder.svg' %}{% endif %}"
+                                         alt="{{ item.product.name }}">
+                                    <a href="{% url 'product_detail' item.product.id %}" class="fw-semibold">{{ item.product.name }}</a>
+                                </div>
                             </td>
-
+                            <td class="text-end text-nowrap">₹{{ item.price }}</td>
+                            <td class="text-center">{{ item.quantity }}</td>
+                            <td class="text-end text-nowrap fw-semibold">₹{{ item.subtotal }}</td>
                         </tr>
-
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">No products found.</td>
+                        </tr>
                     {% endfor %}
-
                     </tbody>
-
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-end">Order Total (incl. shipping)</td>
+                            <td class="text-end text-nowrap">₹{{ order.total_price }}</td>
+                        </tr>
+                    </tfoot>
                 </table>
-
             </div>
+        </div>
 
-            <div class="card-footer text-end">
-
-                <a href="{% url 'orders' %}" class="btn btn-secondary">
-                    Back to Orders
-                </a>
-
-                <a href="{% url 'collections' %}" class="btn btn-primary">
-                    Continue Shopping
-                </a>
-
-            </div>
-
+        <div class="d-flex flex-wrap gap-3 justify-content-end mt-4">
+            <a href="{% url 'orders' %}" class="btn btn-outline-dark"><i class="fa-solid fa-arrow-left me-1"></i> Back to Orders</a>
+            <a href="{% url 'shop' %}" class="btn btn-dark">Continue Shopping</a>
         </div>
 
     </div>

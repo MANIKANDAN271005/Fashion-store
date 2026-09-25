@@ -2,18 +2,16 @@
 {% load static %}
 
 {% block title %}
-
-Dashboard
-
+Dashboard | Fashion Store
 {% endblock %}
 
 {% block content %}
 
-<section class="dashboard-page">
+<section class="section">
 
 <div class="container">
 
-<div class="row">
+<div class="row g-4">
 
 <!-- Sidebar -->
 
@@ -21,56 +19,30 @@ Dashboard
 
 <div class="dashboard-sidebar">
 
-<div class="text-center">
+<div class="user-profile">
 
 {% if request.user.profile_image %}
-    <img src="{{ request.user.profile_image.url }}" class="profile-image">
+    <img src="{{ request.user.profile_image.url }}" alt="{{ request.user.username }}">
 {% else %}
-    <img src="{% static 'images/user.png' %}" class="profile-image">
+    <span class="avatar">{{ request.user.username|first }}</span>
 {% endif %}
 
-<h4>{{ request.user.username }}</h4>
-
+<h4>{{ request.user.first_name|default:request.user.username }}</h4>
 <p>{{ request.user.email }}</p>
-<p class="text-muted">
-    {{ request.user.role|title }}
-</p>
+<span class="role-badge">{{ request.user.get_role_display }}</span>
 
 </div>
 
-<hr>
+<ul class="dashboard-menu">
 
-<a href="{% url 'profile' %}" class="active">
-    <i class="fa fa-user"></i>
-    My Profile
-</a>
+<li><a href="{% url 'dashboard' %}" class="active"><i class="fa fa-gauge"></i> Dashboard</a></li>
+<li><a href="{% url 'profile' %}"><i class="fa fa-user"></i> My Profile</a></li>
+<li><a href="{% url 'orders' %}"><i class="fa fa-box"></i> My Orders</a></li>
+<li><a href="{% url 'wishlist' %}"><i class="fa fa-heart"></i> Wishlist</a></li>
+<li><a href="{% url 'cart' %}"><i class="fa fa-cart-shopping"></i> Cart</a></li>
+<li><a href="{% url 'logout' %}"><i class="fa fa-right-from-bracket"></i> Logout</a></li>
 
-<a href="{% url 'orders' %}">
-    <i class="fa fa-box"></i>
-    My Orders
-</a>
-
-<a href="{% url 'wishlist' %}">
-    <i class="fa fa-heart"></i>
-    Wishlist
-</a>
-<a href="{% url 'dashboard' %}">
-    <i class="fa fa-location-dot"></i>
-    Addresses
-</a>
-
-<a href="{% url 'dashboard' %}">
-    <i class="fa fa-gear"></i>
-    Settings
-</a>
-
-<a href="{% url 'logout' %}">
-
-<i class="fa fa-right-from-bracket"></i>
-
-Logout
-
-</a>
+</ul>
 
 </div>
 
@@ -80,144 +52,81 @@ Logout
 
 <div class="col-lg-9">
 
-<div class="dashboard-card">
+<div class="panel mb-4">
 
-<h2>
+<h2 class="h3 mb-1">Welcome back, {{ request.user.first_name|default:request.user.username }}</h2>
 
-Welcome Back,
-{{ request.user.first_name }} 
-
-👋
-
-</h2>
-
-<p>
-
-Manage your profile and shopping activities.
-
-</p>
+<p class="text-muted mb-0">Manage your profile, orders, wishlist and cart from here.</p>
 
 </div>
 
-<div class="row mt-4">
+<div class="row g-3 g-md-4 mb-4">
 
 <div class="col-md-4">
-
-<div class="stat-card">
-
-<h1>
-
-{{ orders }}
-
-</h1>
-
-<p>
-
-Orders
-
-</p>
-
-</div>
-
+<a href="{% url 'orders' %}" class="stat-card">
+<i class="fa-solid fa-box"></i>
+<div><h3>{{ orders }}</h3><p>Orders</p></div>
+</a>
 </div>
 
 <div class="col-md-4">
-
-<div class="stat-card">
-
-<h1>
-
-{{ wishlist }}
-
-</h1>
-
-<p>
-
-Wishlist
-
-</p>
-
-</div>
-
+<a href="{% url 'wishlist' %}" class="stat-card">
+<i class="fa-solid fa-heart"></i>
+<div><h3>{{ wishlist }}</h3><p>Wishlist</p></div>
+</a>
 </div>
 
 <div class="col-md-4">
-
-<div class="stat-card">
-
-<h1>
-
-{{ cart }}
-
-</h1>
-
-<p>
-
-Cart Items
-
-</p>
-
+<a href="{% url 'cart' %}" class="stat-card">
+<i class="fa-solid fa-cart-shopping"></i>
+<div><h3>{{ cart }}</h3><p>Cart Items</p></div>
+</a>
 </div>
 
 </div>
 
+<div class="table-card">
+
+<div class="d-flex justify-content-between align-items-center p-3 px-md-4">
+<h3 class="panel-title mb-0">Recent Orders</h3>
+<a href="{% url 'orders' %}" class="btn btn-sm btn-outline-dark">View All</a>
 </div>
 
-<div class="dashboard-card mt-4">
+<div class="table-responsive">
 
-<h3>
-
-Recent Orders
-
-</h3>
-
-<table class="table">
+<table class="table align-middle">
 
 <thead>
-
 <tr>
-
-<th>ID</th>
-
+<th>Order ID</th>
+<th>Date</th>
 <th>Status</th>
-
-<th>Total</th>
-
+<th class="text-end">Total</th>
+<th></th>
 </tr>
-
 </thead>
 
 <tbody>
 
 {% for order in recent_orders %}
-
 <tr>
-
-<td>
-
-#{{ order.id }}
-
-</td>
-
-<td>
-
-{{ order.status }}
-
-</td>
-
-<td>
-
-₹{{ order.total_price }}
-
-</td>
-
+<td class="fw-semibold">#{{ order.id }}</td>
+<td class="text-muted text-nowrap">{{ order.ordered_at|date:"d M Y" }}</td>
+<td><span class="status-pill status-{{ order.status|lower }}">{{ order.status }}</span></td>
+<td class="text-end text-nowrap">₹{{ order.total_price }}</td>
+<td class="text-end"><a href="{% url 'order_detail' order.id %}" class="btn btn-sm btn-outline-dark">View</a></td>
 </tr>
-
+{% empty %}
+<tr>
+<td colspan="5" class="text-center text-muted py-4">No orders yet. <a href="{% url 'shop' %}" class="text-accent fw-semibold">Start shopping</a></td>
+</tr>
 {% endfor %}
 
 </tbody>
 
 </table>
+
+</div>
 
 </div>
 

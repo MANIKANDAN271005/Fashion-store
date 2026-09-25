@@ -1,32 +1,37 @@
 {% extends 'base.html' %}
 
+{% block title %}Order Placed | Fashion Store{% endblock %}
+
 {% block content %}
 
-<section class="py-5">
+<section class="section">
 
-<div class="container text-center">
+<div class="container">
 
-<i class="fa-solid fa-circle-check text-success"
-style="font-size:90px;"></i>
+<div class="row justify-content-center">
 
-<h2 class="mt-4">
+<div class="col-lg-6">
 
-Thank You!
+<div class="panel text-center py-5">
 
-</h2>
+    <span class="success-icon"><i class="fa-solid fa-check"></i></span>
 
-<p>
+    <h1 class="h2 mb-2">Thank You!</h1>
 
-Your order has been placed successfully.
+    <p class="text-muted mb-4">Your order has been placed successfully. We'll let you know when it ships.</p>
 
-</p>
+    <div class="d-flex flex-wrap justify-content-center gap-3">
+        {% if user.is_authenticated %}
+        <a href="{% url 'orders' %}" class="btn btn-outline-dark">View My Orders</a>
+        {% endif %}
+        <a href="{% url 'shop' %}" class="btn btn-dark">Continue Shopping</a>
+    </div>
 
-<a href="{% url 'shop' %}"
-class="btn btn-dark">
+</div>
 
-Continue Shopping
+</div>
 
-</a>
+</div>
 
 </div>
 

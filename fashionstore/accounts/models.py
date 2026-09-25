@@ -60,6 +60,8 @@ class Product(models.Model):
 
     stock = models.PositiveIntegerField(default=20)
 
+    is_available = models.BooleanField(default=True)
+
     image = models.ImageField(
     upload_to='products/',
     blank=True,
@@ -109,7 +111,9 @@ class Order(models.Model):
 
     PAYMENT_CHOICES = [
         ("COD", "Cash On Delivery"),
-        ("ONLINE", "Online Payment"),
+        ("UPI", "UPI"),
+        ("DEBIT_CARD", "Debit Card"),
+        ("CREDIT_CARD", "Credit Card"),
     ]
 
     user = models.ForeignKey(

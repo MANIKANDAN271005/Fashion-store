@@ -1,0 +1,40 @@
+{% comment %}
+Result count + sort dropdown + removable filter chips (views.filter_products()).
+{% endcomment %}
+
+<div class="shop-toolbar">
+
+    <p>
+        Showing <strong>{{ products|length }}</strong> product{{ products|length|pluralize }}
+        {% if query %}for <strong>"{{ query }}"</strong>{% endif %}
+    </p>
+
+    <form method="GET" action="{{ request.path }}">
+        {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+        {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+        {% if selected_price %}<input type="hidden" name="price" value="{{ selected_price }}">{% endif %}
+        <label for="sortSelect">Sort by</label>
+        <select id="sortSelect" name="sort" class="form-select" data-autosubmit>
+            {% for key, label in sort_options %}
+            <option value="{{ key }}" {% if selected_sort == key %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <noscript><button type="submit" class="btn btn-dark btn-sm">Apply</button></noscript>
+    </form>
+
+</div>
+
+{% if selected_category or selected_price %}
+<div class="active-filters">
+    {% if selected_category %}
+    <a class="filter-chip" href="{{ request.path }}?{% if query %}q={{ query|urlencode }}&{% endif %}{% if selected_price %}price={{ selected_price }}&{% endif %}sort={{ selected_sort }}" title="Remove filter">
+        {{ selected_category|title }} <i class="fa-solid fa-xmark"></i>
+    </a>
+    {% endif %}
+    {% if selected_price %}
+    <a class="filter-chip" href="{{ request.path }}?{% if query %}q={{ query|urlencode }}&{% endif %}{% if selected_category %}category={{ selected_category|urlencode }}&{% endif %}sort={{ selected_sort }}" title="Remove filter">
+        {{ selected_price_label }} <i class="fa-solid fa-xmark"></i>
+    </a>
+    {% endif %}
+</div>
+{% endif %}

@@ -1,8 +1,8 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from . import views
+from . import views, admin_views
 
 urlpatterns = [
 
@@ -49,11 +49,19 @@ urlpatterns = [
     # Dashboards
     path('dashboard/', views.dashboard, name='dashboard'),
     path('seller-dashboard/', views.seller_dashboard, name='seller_dashboard'),
-    path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
-    path('user-dashboard/', views.user_dashboard, name='user_dashboard'),
 
-    # Accounts App
-    # path("accounts/", include("accounts.urls")),
+    # Custom Admin Panel (superuser only)
+    path('admin-dashboard/', admin_views.dashboard, name='admin_dashboard'),
+    path('admin-dashboard/products/', admin_views.product_list, name='admin_products'),
+    path('admin-dashboard/products/add/', admin_views.product_add, name='admin_product_add'),
+    path('admin-dashboard/products/<int:id>/edit/', admin_views.product_edit, name='admin_product_edit'),
+    path('admin-dashboard/products/<int:id>/delete/', admin_views.product_delete, name='admin_product_delete'),
+    path('admin-dashboard/products/<int:id>/toggle/', admin_views.product_toggle_availability, name='admin_product_toggle'),
+    path('admin-dashboard/products/<int:id>/stock/', admin_views.product_update_stock, name='admin_product_stock'),
+    path('admin-dashboard/categories/', admin_views.category_list, name='admin_categories'),
+    path('admin-dashboard/categories/add/', admin_views.category_add, name='admin_category_add'),
+    path('admin-dashboard/categories/<int:id>/edit/', admin_views.category_edit, name='admin_category_edit'),
+    path('admin-dashboard/categories/<int:id>/delete/', admin_views.category_delete, name='admin_category_delete'),
 
     # Django Admin
     path('admin/', admin.site.urls),

@@ -2,187 +2,67 @@
 {% load static %}
 
 {% block title %}
-Categories
+Categories | Fashion Store
 {% endblock %}
 
 {% block content %}
 
-<!-- Banner -->
-<section class="products-banner">
+<section class="page-hero text-center">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Categories</li>
+            </ol>
+        </nav>
+        <h1>{% if selected_category %}{{ selected_category|title }}{% else %}Our Collection{% endif %}</h1>
+        <p>Premium fashion for everyone.</p>
+    </div>
+</section>
 
-<div class="container text-center">
+<section class="section">
 
-<h1>Our Collection</h1>
+<div class="container">
 
-<p>Premium Fashion for Everyone</p>
+<div class="row g-4">
+
+<div class="col-lg-3">
+    {% include 'partials/shop_filters.html' %}
+</div>
+
+<div class="col-lg-9">
+
+    {% include 'partials/shop_toolbar.html' %}
+
+    <div class="row g-3 g-md-4">
+
+    {% for product in products %}
+
+    <div class="col-6 col-md-4">
+        {% include 'partials/product_card.html' with product=product %}
+    </div>
+
+    {% empty %}
+
+    <div class="col-12">
+        <div class="empty-state">
+            <i class="fa-solid fa-box-open"></i>
+            <h3>No Products Found</h3>
+            <p>Nothing matches these filters right now.</p>
+            <a href="{{ request.path }}" class="btn btn-dark">Clear Filters</a>
+        </div>
+    </div>
+
+    {% endfor %}
+
+    </div>
+
+</div>
+
+</div>
 
 </div>
 
 </section>
-
-<div class="container my-5">
-
-<div class="row">
-
-<!-- Sidebar -->
-
-<div class="col-lg-3">
-
-<div class="filter-box">
-
-<h4>Categories</h4>
-
-<h4>Categories</h4>
-
-<hr>
-
-<!-- All Products -->
-<a href="{% url 'collections' %}" class="category-link">
-    All Products
-</a>
-
-<!-- Dynamic Categories -->
-{% for category in categories %}
-
-<a href="{% url 'collections' %}?category={{ category.id }}"
-   class="category-link">
-
-    {{ category.name }}
-
-</a>
-
-{% endfor %}
-
-</div>
-
-</div>
-
-<!-- Products -->
-
-<div class="col-lg-9">
-
-<div class="d-flex justify-content-between mb-4 flex-wrap">
-
-<input
-
-type="text"
-
-class="form-control search-box"
-
-placeholder="Search Products..."
-
->
-
-<select class="form-select sort-box">
-
-<option>Newest</option>
-
-<option>Price Low to High</option>
-
-<option>Price High to Low</option>
-
-<option>Popular</option>
-
-</select>
-
-</div>
-
-<div class="row">
-
-{% for product in products %}
-
-<div class="col-lg-4 col-md-6 mb-4">
-
-<div class="product-card">
-
-{% if product.image %}
-
-<img src="{{ product.image.url }}">
-
-{% else %}
-
-<img src="{% static 'images/no-image.png' %}">
-
-{% endif %}
-
-<div class="product-info">
-
-    <h5>{{ product.name }}</h5>
-
-    <p class="text-muted">
-        Category: {{ product.category.name }}
-    </p>
-
-    <p>{{ product.description|truncatewords:12 }}</p>
-
-    <div class="price">
-        ₹{{ product.price }}
-    </div>
-
-    <div class="buttons">
-
-        <a href="{% url 'product_detail' product.id %}" class="btn btn-dark">
-            View
-        </a>
-
-        <a href="{% url 'add_to_cart' product.id %}" class="btn btn-warning">
-            Cart
-        </a>
-
-    </div>
-
-</div>
-
-</div>
-
-</div>
-
-{% endfor %}
-
-</div>
-
-<nav>
-
-<ul class="pagination justify-content-center mt-4">
-
-<li class="page-item">
-
-<a class="page-link" href="#">Previous</a>
-
-</li>
-
-<li class="page-item active">
-
-<a class="page-link" href="#">1</a>
-
-</li>
-
-<li class="page-item">
-
-<a class="page-link" href="#">2</a>
-
-</li>
-
-<li class="page-item">
-
-<a class="page-link" href="#">3</a>
-
-</li>
-
-<li class="page-item">
-
-<a class="page-link" href="#">Next</a>
-
-</li>
-
-</ul>
-
-</nav>
-
-</div>
-
-</div>
-
-</div>
 
 {% endblock %}

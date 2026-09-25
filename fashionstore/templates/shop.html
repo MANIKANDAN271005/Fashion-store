@@ -7,948 +7,311 @@ Shop | Fashion Store
 
 {% block content %}
 
-<!-- ==========================================
-SHOP HERO
-========================================== -->
+{% if is_filtered %}
 
-<div class="container mt-4">
+<!-- ================= FILTERED HEADER ================= -->
 
-    {% if query %}
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
-        <div>
-
-            <h3>
-                Search Results
-            </h3>
-
-            <p class="text-muted mb-0">
-                Showing results for
-                <strong>"{{ query }}"</strong>
-            </p>
-
-        </div>
-
-        <div>
-            <span class="badge bg-dark fs-6">
-                {{ products|length }} Product{{ products|length|pluralize }}
-            </span>
-        </div>
-
-    </div>
-
-    {% endif %}
-</div>
-
-<section class="shop-hero py-5">
-
+<section class="page-hero">
     <div class="container">
-
-        <div class="row align-items-center">
-
-            <!-- Left -->
-
-            <div class="col-lg-6">
-
-                <span class="hero-tag">
-                    NEW ARRIVAL 2026
-                </span>
-
-                <h1 class="display-4 fw-bold mt-3">
-
-                    Upgrade Your
-                    <span class="text-warning">
-                        Fashion Style
-                    </span>
-
-                </h1>
-
-                <p class="lead mt-3">
-
-                    Explore thousands of premium fashion products
-                    for Men, Women, Kids, Shoes and Accessories.
-
-                </p>
-
-                <div class="mt-4">
-
-                    <a href="#shopProducts"
-                       class="btn btn-dark btn-lg me-3">
-
-                        Shop Now
-
-                    </a>
-
-                    <a href="{% url 'collections' %}"
-                       class="btn btn-outline-dark btn-lg">
-
-                        View Collection
-
-                    </a>
-
-                </div>
-
-            </div>
-
-            <!-- Right -->
-
-            <div class="col-lg-6 text-center">
-
-                <img src="{% static 'images/shopmodel1.png' %}"
-                     class="img-fluid shop-hero-image"
-                     alt="Fashion Model">
-
-            </div>
-
-        </div>
-
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'shop' %}">Shop</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ selected_category|default:selected_price_label|title }}</li>
+            </ol>
+        </nav>
+        <h1>{% if selected_category %}{{ selected_category|title }} Collection{% else %}{{ selected_price_label }}{% endif %}</h1>
+        <p>Browse our handpicked {{ selected_category|default:"fashion"|lower }} styles.</p>
     </div>
-
 </section>
-
-<!-- ==========================================
-SHOP BY CATEGORY
-========================================== -->
-
-<section class="shop-categories py-5">
-
-    <div class="container">
-
-        <div class="text-center mb-5">
-
-            <h2 class="section-title">
-
-                Shop By Category
-
-            </h2>
-
-            <p>
-
-                Find your favourite fashion collection.
-
-            </p>
-
-        </div>
-
-        <div class="row g-4">
-
-            <!-- MEN -->
-
-            <div class="col-lg-4 col-md-6">
-
-                <div class="category-card">
-
-                    <img src="{% static 'images/men5.jpg' %}"
-                         alt="Men Fashion">
-
-                    <div class="category-overlay">
-
-                        <h3>Men</h3>
-
-                        <p>Premium Shirts • Jeans • Jackets</p>
-
-                        <a href="{% url 'shop' %}?category=Men"
-                           class="btn btn-warning">
-
-                            Explore
-
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- WOMEN -->
-
-            <div class="col-lg-4 col-md-6">
-
-                <div class="category-card">
-
-                    <img src="{% static 'images/women5.jpg' %}"
-                         alt="Women Fashion">
-
-                    <div class="category-overlay">
-
-                        <h3>Women</h3>
-
-                        <p>Trending Dresses • Tops • Sarees</p>
-
-                        <a href="{% url 'shop' %}?category=Women"
-                           class="btn btn-warning">
-
-                            Explore
-
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- KIDS -->
-
-            <div class="col-lg-4 col-md-6">
-
-                <div class="category-card">
-
-                    <img src="{% static 'images/kids2.jpg' %}"
-                         alt="Kids Fashion">
-
-                    <div class="category-overlay">
-
-                        <h3>Kids</h3>
-
-                        <p>Comfortable & Stylish Collections</p>
-
-                        <a href="{% url 'shop' %}?category=Kids"
-                           class="btn btn-warning">
-
-                            Explore
-
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- SHOES -->
-
-            <div class="col-lg-6">
-
-                <div class="category-card">
-
-                    <img src="{% static 'images/shoes5.jpg' %}"
-                         alt="Shoes">
-
-                    <div class="category-overlay">
-
-                        <h3>Shoes</h3>
-
-                        <p>Sneakers • Sports • Casual</p>
-
-                        <a href="{% url 'shop' %}?category=Shoes"
-                           class="btn btn-warning">
-
-                            Explore
-
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- ACCESSORIES -->
-
-            <div class="col-lg-6">
-
-                <div class="category-card">
-
-                    <img src="{% static 'images/Accessories1.jpg' %}"
-                         alt="Accessories">
-
-                    <div class="category-overlay">
-
-                        <h3>Accessories</h3>
-
-                        <p>Bags • Watches • Caps • Sunglasses</p>
-
-                        <a href="{% url 'shop' %}?category=Accessories"
-                           class="btn btn-warning">
-
-                            Explore
-
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-<!-- ==========================================
-SHOP CONTENT
-========================================== -->
-
-<section class="shop-page py-5">
-
-    <div class="container">
-
-        <div class="row">
-
-            <!-- ======================
-            SIDEBAR START
-            ======================= -->
-
-            <div class="col-lg-3">
-
-<!-- ==========================================
-SHOP SIDEBAR
-========================================== -->
-
-<aside class="shop-sidebar">
-
-    <!-- Search -->
-
-    <div class="sidebar-card mb-4">
-
-        <h4>Search Products</h4>
-
-        <form action="{% url 'search' %}" method="GET">
-
-            <div class="search-box">
-
-                <input
-                    type="text"
-                    name="q"
-                    class="form-control"
-                    value="{{ query }}"
-                    placeholder="Search fashion...">
-
-                <button type="submit">
-
-                    <i class="fa-solid fa-search"></i>
-
-                </button>
-
-            </div>
-
-        </form>
-
-    </div>
-
-    <!-- Categories -->
-
-    <div class="sidebar-card mb-4">
-
-        <h4>Categories</h4>
-
-        <ul class="category-menu">
-
-            <li>
-
-                <a href="{% url 'shop' %}?category=Men">
-
-                    <i class="fa-solid fa-shirt"></i>
-
-                    Men Fashion
-
-                </a>
-
-            </li>
-
-            <li>
-
-                <a href="{% url 'shop' %}?category=Women">
-
-                    <i class="fa-solid fa-person-dress"></i>
-
-                    Women Fashion
-
-                </a>
-
-            </li>
-
-            <li>
-
-                <a href="{% url 'shop' %}?category=Kids">
-
-                    <i class="fa-solid fa-child"></i>
-
-                    Kids Collection
-
-                </a>
-
-            </li>
-
-            <li>
-
-                <a href="{% url 'shop' %}?category=Shoes">
-
-                    <i class="fa-solid fa-shoe-prints"></i>
-
-                    Shoes
-
-                </a>
-
-            </li>
-
-            <li>
-
-                <a href="{% url 'shop' %}?category=Accessories">
-
-                    <i class="fa-solid fa-gem"></i>
-
-                    Accessories
-
-                </a>
-
-            </li>
-
-        </ul>
-
-    </div>
-
-    <!-- Price Filter -->
-
-    <div class="sidebar-card mb-4">
-
-        <h4>Price Range</h4>
-
-        <label>
-
-            <input type="checkbox">
-
-            Under ₹999
-
-        </label>
-
-        <label>
-
-            <input type="checkbox">
-
-            ₹1000 - ₹1999
-
-        </label>
-
-        <label>
-
-            <input type="checkbox">
-
-            ₹2000 - ₹3999
-
-        </label>
-
-        <label>
-
-            <input type="checkbox">
-
-            ₹4000+
-
-        </label>
-
-    </div>
-
-    <!-- Size -->
-
-    <div class="sidebar-card mb-4">
-
-        <h4>Select Size</h4>
-
-        <div class="size-buttons">
-
-            <button>S</button>
-
-            <button>M</button>
-
-            <button>L</button>
-
-            <button>XL</button>
-
-            <button>XXL</button>
-
-        </div>
-
-    </div>
-
-    <!-- Colors -->
-
-    <div class="sidebar-card mb-4">
-
-        <h4>Popular Colors</h4>
-
-        <div class="color-list">
-
-            <span class="black"></span>
-
-            <span class="white"></span>
-
-            <span class="blue"></span>
-
-            <span class="red"></span>
-
-            <span class="green"></span>
-
-            <span class="yellow"></span>
-
-        </div>
-
-    </div>
-
-    <!-- Brands -->
-
-    <div class="sidebar-card mb-4">
-
-        <h4>Top Brands</h4>
-
-        <label><input type="checkbox"> Nike</label>
-
-        <label><input type="checkbox"> Adidas</label>
-
-        <label><input type="checkbox"> Puma</label>
-
-        <label><input type="checkbox"> Levi's</label>
-
-        <label><input type="checkbox"> Zara</label>
-
-        <label><input type="checkbox"> H&M</label>
-
-    </div>
-
-    <!-- Offer Banner -->
-
-    <div class="sidebar-card offer-card p-0 overflow-hidden">
-
-        <img src="{% static 'images/offermodel1.jpg' %}"
-             class="img-fluid"
-             alt="Offer Banner">
-
-        <div class="text-center p-4">
-
-            <h4>Flat 50% OFF</h4>
-
-            <p>Selected Fashion Collection</p>
-
-            <a href="{% url 'shop' %}"
-               class="btn btn-dark">
-
-                Shop Now
-
-            </a>
-
-        </div>
-
-    </div>
-
-</aside>
-
-</div>
-
-<!-- ==========================================
-PRODUCT AREA START
-========================================== -->
-
-<div class="col-lg-9" id="shopProducts">
-
-        <!-- ==========================================
-    PRODUCT GRID
-    ========================================== -->
-
-    <div class="row g-4">
-
-        {% if products %}
-
-        {% for product in products %}
-
-        <div class="col-xl-4 col-lg-6 col-md-6">
-
-            <div class="product-card">
-
-                {% if product.discount_price %}
-                <span class="sale-badge">SALE</span>
-                {% endif %}
-
-                <a href="{% url 'add_to_wishlist' product.id %}"
-                   class="wishlist-btn">
-                    <i class="fa-regular fa-heart"></i>
-                </a>
-
-                <div class="product-image">
-
-                    {% if product.image %}
-                        <img src="{{ product.image.url }}"
-                             alt="{{ product.name }}">
-                    {% else %}
-                        <img src="{% static 'images/no-image.png' %}"
-                             alt="No Image">
-                    {% endif %}
-
-                </div>
-
-                <div class="product-content">
-
-                    <small class="product-category">
-                        {{ product.category }}
-                    </small>
-
-                    <h5>{{ product.name }}</h5>
-
-                    <div class="rating">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-regular fa-star"></i>
-                    </div>
-
-                    <div class="price-box">
-
-                        {% if product.discount_price %}
-
-                            <span class="old-price">
-                                ₹{{ product.price }}
-                            </span>
-
-                            <span class="new-price">
-                                ₹{{ product.discount_price }}
-                            </span>
-
-                        {% else %}
-
-                            <span class="new-price">
-                                ₹{{ product.price }}
-                            </span>
-
-                        {% endif %}
-
-                    </div>
-
-                    <div class="product-buttons">
-
-                        <a href="{% url 'product_detail' product.id %}"
-                            class="btn btn-outline-dark">View</a>
-
-                        <a href="{% url 'add_to_cart' product.id %}"
-   class="btn btn-dark">
-    <i class="fa-solid fa-cart-shopping"></i>
-</a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        {% empty %}
-
-        <div class="col-12">
-
-            <div class="alert alert-warning text-center">
-
-                <h4>No Products Available</h4>
-
-                <p>Products will appear here soon.</p>
-
-            </div>
-
-        </div>
-
-        {% endfor %}
 
 {% else %}
 
-<div class="col-12">
+<!-- ================= SHOP HERO ================= -->
 
-<div class="text-center py-5">
+<section class="shop-hero">
 
-<i class="fa-solid fa-magnifying-glass fa-4x text-secondary mb-3"></i>
+    <div class="container">
 
-<h2>No Products Found</h2>
+        <div class="row align-items-center g-4">
 
-<p class="text-muted">
+            <div class="col-lg-6">
 
-No products found for
+                <span class="hero-tag">NEW ARRIVALS 2026</span>
 
-<strong>"{{ query }}"</strong>
+                <h1>Upgrade Your <span>Fashion Style</span></h1>
 
-</p>
+                <p>
+                    Explore premium fashion products for Men, Women, Kids,
+                    Shoes and Accessories.
+                </p>
 
-<a href="{% url 'shop' %}"
+                <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+                    <a href="#shopProducts" class="btn btn-warning btn-lg">Shop Now</a>
+                    <a href="{% url 'collections' %}" class="btn btn-outline-light btn-lg">View Collections</a>
+                </div>
 
-class="btn btn-dark mt-3">
+            </div>
 
-Continue Shopping
+            <div class="col-lg-6">
+                <img src="{% static 'images/shopmodel1.png' %}" class="shop-hero-image" alt="Inside the Fashion Store boutique">
+            </div>
 
-</a>
+        </div>
 
-</div>
+    </div>
 
-</div>
+</section>
+
+<!-- ================= SHOP BY CATEGORY ================= -->
+
+<section class="section bg-surface">
+
+    <div class="container">
+
+        <div class="section-head">
+            <h2 class="section-title">Shop By Category</h2>
+            <p class="section-sub">Find your favourite fashion collection.</p>
+        </div>
+
+        <div class="row g-3 g-md-4">
+
+            <div class="col-6 col-lg-4">
+                <a href="{% url 'shop' %}?category=Men" class="cat-tile">
+                    <img src="{% static 'images/men4.jpg' %}" alt="Men fashion" loading="lazy">
+                    <div class="cat-tile__overlay">
+                        <h3>Men</h3>
+                        <p>Premium Shirts • Jeans • Jackets</p>
+                        <span class="btn btn-warning btn-sm">Explore</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-6 col-lg-4">
+                <a href="{% url 'shop' %}?category=Women" class="cat-tile">
+                    <img src="{% static 'images/women5.jpg' %}" alt="Women fashion" loading="lazy">
+                    <div class="cat-tile__overlay">
+                        <h3>Women</h3>
+                        <p>Trending Dresses • Tops • Sarees</p>
+                        <span class="btn btn-warning btn-sm">Explore</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-12 col-lg-4">
+                <a href="{% url 'shop' %}?category=Kids" class="cat-tile cat-tile--wide-mobile">
+                    <img src="{% static 'images/kids3.png' %}" alt="Kids fashion" loading="lazy">
+                    <div class="cat-tile__overlay">
+                        <h3>Kids</h3>
+                        <p>Comfortable &amp; Stylish Collections</p>
+                        <span class="btn btn-warning btn-sm">Explore</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-6">
+                <a href="{% url 'shop' %}?category=Shoes" class="cat-tile cat-tile--wide">
+                    <img src="{% static 'images/shoes5.jpg' %}" alt="Shoes" loading="lazy">
+                    <div class="cat-tile__overlay">
+                        <h3>Shoes</h3>
+                        <p>Sneakers • Sports • Casual</p>
+                        <span class="btn btn-warning btn-sm">Explore</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-6">
+                <a href="{% url 'shop' %}?category=Accessories" class="cat-tile cat-tile--wide">
+                    <img src="{% static 'images/Accessories1.jpg' %}" alt="Accessories" loading="lazy">
+                    <div class="cat-tile__overlay">
+                        <h3>Accessories</h3>
+                        <p>Bags • Watches • Caps • Sunglasses</p>
+                        <span class="btn btn-warning btn-sm">Explore</span>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
 
 {% endif %}
 
+<!-- ================= PRODUCTS ================= -->
+
+<section class="section" id="shopProducts">
+
+    <div class="container">
+
+        <div class="row g-4">
+
+            <div class="col-lg-3">
+                {% include 'partials/shop_filters.html' %}
+            </div>
+
+            <div class="col-lg-9">
+
+                {% include 'partials/shop_toolbar.html' %}
+
+                <div class="row g-3 g-md-4">
+
+                    {% for product in products %}
+
+                    <div class="col-6 col-md-4">
+                        {% include 'partials/product_card.html' with product=product %}
+                    </div>
+
+                    {% empty %}
+
+                    <div class="col-12">
+                        <div class="empty-state">
+                            <i class="fa-solid fa-box-open"></i>
+                            <h3>No Products Found</h3>
+                            <p>
+                                {% if is_filtered %}
+                                Nothing matches these filters right now. Try a different category or price range.
+                                {% else %}
+                                Products will appear here soon.
+                                {% endif %}
+                            </p>
+                            {% if is_filtered %}
+                            <a href="{% url 'shop' %}" class="btn btn-dark">Clear Filters</a>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
-        </div>
-    <!-- End Product Grid -->
 
-    <!-- ==========================================
-    SPECIAL OFFER
-    ========================================== -->
+</section>
 
-    <section class="special-offer py-5">
+<!-- ================= SPECIAL OFFER ================= -->
 
-        <div class="container">
+<section class="section pt-0">
 
-            <div class="offer-box">
+    <div class="container">
 
-                <div class="row align-items-center">
+        <div class="offer-banner">
 
-                    <div class="col-lg-6">
+            <div class="row align-items-center g-4">
 
-                        <span class="offer-tag">
+                <div class="col-lg-6">
+                    <span class="offer-tag">Limited Time Offer</span>
+                    <h2>Flat 50% OFF</h2>
+                    <p>Premium Fashion Collection. Hurry! Offer ends soon.</p>
+                    <a href="{% url 'collections' %}" class="btn btn-warning btn-lg">Shop Now</a>
+                </div>
 
-                            Limited Time Offer
-
-                        </span>
-
-                        <h2>
-
-                            Flat 50% OFF
-
-                        </h2>
-
-                        <p>
-
-                            Premium Fashion Collection.
-                            Hurry! Offer Ends Soon.
-
-                        </p>
-
-                        <a href="{% url 'shop' %}"
-
-                           class="btn btn-warning btn-lg">
-
-                            Shop Now
-
-                        </a>
-
-                    </div>
-
-                    <div class="col-lg-6 text-center">
-
-                        <img src="{% static 'images/offermodel2.png' %}"
-
-                             class="img-fluid"
-
-                             alt="Offer">
-
-                    </div>
-
+                <div class="col-lg-6">
+                    <img src="{% static 'images/offermodel2.png' %}" alt="Model wearing the sale collection" loading="lazy">
                 </div>
 
             </div>
 
         </div>
 
-    </section>
+    </div>
 
-    <!-- ==========================================
-    SHOP FEATURES
-    ========================================== -->
+</section>
 
-    <section class="shop-features py-5">
+<!-- ================= SHOP FEATURES ================= -->
 
-        <div class="row text-center">
+<section class="section pt-0">
 
-            <div class="col-lg-3 col-md-6 mb-4">
+    <div class="container">
 
+        <div class="row g-3 g-md-4">
+
+            <div class="col-6 col-lg-3">
                 <div class="feature-box">
-
                     <i class="fa-solid fa-truck-fast"></i>
-
                     <h5>Free Shipping</h5>
-
-                    <p>Orders Above ₹999</p>
-
+                    <p>Orders above ₹999</p>
                 </div>
-
             </div>
 
-            <div class="col-lg-3 col-md-6 mb-4">
-
+            <div class="col-6 col-lg-3">
                 <div class="feature-box">
-
                     <i class="fa-solid fa-rotate-left"></i>
-
                     <h5>Easy Returns</h5>
-
-                    <p>7 Days Return Policy</p>
-
+                    <p>7-day return policy</p>
                 </div>
-
             </div>
 
-            <div class="col-lg-3 col-md-6 mb-4">
-
+            <div class="col-6 col-lg-3">
                 <div class="feature-box">
-
                     <i class="fa-solid fa-lock"></i>
-
                     <h5>Secure Payment</h5>
-
-                    <p>100% Protected Checkout</p>
-
+                    <p>100% protected checkout</p>
                 </div>
-
             </div>
 
-            <div class="col-lg-3 col-md-6 mb-4">
-
+            <div class="col-6 col-lg-3">
                 <div class="feature-box">
-
                     <i class="fa-solid fa-headset"></i>
-
                     <h5>24/7 Support</h5>
-
-                    <p>Always Ready To Help</p>
-
+                    <p>Always ready to help</p>
                 </div>
-
             </div>
 
         </div>
 
-    </section>
+    </div>
 
+</section>
 
-    <!-- ==========================================
-    BRAND LOGOS
-    ========================================== -->
+<!-- ================= BRAND LOGOS ================= -->
 
-    <section class="brand-section py-5">
+<section class="section bg-surface">
 
-        <div class="container">
+    <div class="container">
 
-            <div class="section-title text-center mb-5">
+        <div class="section-head">
+            <h2 class="section-title">Popular Brands</h2>
+        </div>
 
-                <h2>
+        <div class="row g-3">
+            <div class="col-4 col-md-2"><div class="brand-tile"><img src="{% static 'images/nike.png' %}" alt="Nike" loading="lazy"></div></div>
+            <div class="col-4 col-md-2"><div class="brand-tile"><img src="{% static 'images/adidas.png' %}" alt="Adidas" loading="lazy"></div></div>
+            <div class="col-4 col-md-2"><div class="brand-tile"><img src="{% static 'images/puma.png' %}" alt="Puma" loading="lazy"></div></div>
+            <div class="col-4 col-md-2"><div class="brand-tile"><img src="{% static 'images/levis.png' %}" alt="Levi's" loading="lazy"></div></div>
+            <div class="col-4 col-md-2"><div class="brand-tile"><img src="{% static 'images/zara.png' %}" alt="Zara" loading="lazy"></div></div>
+            <div class="col-4 col-md-2"><div class="brand-tile"><img src="{% static 'images/h&m.png' %}" alt="H&amp;M" loading="lazy"></div></div>
+        </div>
 
-                    Popular Brands
+    </div>
 
-                </h2>
+</section>
 
-            </div>
+<!-- ================= NEWSLETTER ================= -->
 
-            <div class="row text-center align-items-center">
+<section class="section">
 
-                <div class="col-6 col-md-2 mb-4">
+    <div class="container">
 
-                    <img src="{% static 'images/nike.png' %}"
-                         class="img-fluid brand-logo"
-                         alt="Nike">
+        <div class="newsletter-box">
 
-                </div>
+            <h2>Join Our Newsletter</h2>
 
-                <div class="col-6 col-md-2 mb-4">
+            <p>Subscribe and receive exclusive offers, discounts and new arrivals.</p>
 
-                    <img src="{% static 'images/adidas.png' %}"
-                         class="img-fluid brand-logo"
-                         alt="Adidas">
-
-                </div>
-
-                <div class="col-6 col-md-2 mb-4">
-
-                    <img src="{% static 'images/puma.png' %}"
-                         class="img-fluid brand-logo"
-                         alt="Puma">
-
-                </div>
-
-                <div class="col-6 col-md-2 mb-4">
-
-                    <img src="{% static 'images/levis.png' %}"
-                         class="img-fluid brand-logo"
-                         alt="Levis">
-
-                </div>
-
-                <div class="col-6 col-md-2 mb-4">
-
-                    <img src="{% static 'images/zara.png' %}"
-                         class="img-fluid brand-logo"
-                         alt="Zara">
-
-                </div>
-
-                <div class="col-6 col-md-2 mb-4">
-
-                    <img src="{% static 'images/h&m.png' %}"
-                         class="img-fluid brand-logo"
-                         alt="H&M">
-
-                </div>
-
-            </div>
+            <form class="newsletter-form">
+                <input type="email" class="form-control" placeholder="Enter your email" aria-label="Email address" required>
+                <button type="submit" class="btn btn-warning">Subscribe</button>
+            </form>
 
         </div>
 
-    </section>
-
-
-    <!-- ==========================================
-    NEWSLETTER
-    ========================================== -->
-
-    <section class="newsletter py-5">
-
-        <div class="container">
-
-            <div class="newsletter-box text-center">
-
-                <h2>
-
-                    Join Our Newsletter
-
-                </h2>
-
-                <p>
-
-                    Subscribe and receive exclusive offers,
-                    discounts and new arrivals.
-
-                </p>
-
-                <form class="row justify-content-center">
-
-                    <div class="col-lg-6">
-
-                        <input
-                            type="email"
-                            class="form-control"
-                            placeholder="Enter your email">
-
-                    </div>
-
-                    <div class="col-lg-2 mt-3 mt-lg-0">
-
-                        <button type="submit" class="btn btn-warning subscribe-btn">
-    Subscribe
-</button>
-
-                    </div>
-
-                </form>
-
-            </div>
-
-        </div>
-
-    </section>
-
-</div>
-<!-- End Product Area -->
-
-</div>
-<!-- End Row -->
-
-</div>
-<!-- End Container -->
+    </div>
 
 </section>
 

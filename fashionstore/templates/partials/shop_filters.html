@@ -1,0 +1,76 @@
+{% load static %}
+{% comment %}
+Sidebar filters for pages driven by views.filter_products().
+Links point back at the current page and keep the other active filters.
+{% endcomment %}
+
+<button class="btn btn-outline-dark w-100 d-lg-none mb-3" type="button"
+        data-bs-toggle="collapse" data-bs-target="#shopFilters" aria-expanded="false" aria-controls="shopFilters">
+    <i class="fa-solid fa-sliders me-2"></i> Filters
+</button>
+
+<div class="collapse d-lg-block" id="shopFilters">
+
+<aside class="shop-sidebar">
+
+    <div class="filter-card">
+        <h4>Search</h4>
+        <form action="{% url 'search' %}" method="GET" class="filter-search" role="search">
+            <input type="search" name="q" class="form-control" value="{{ query }}" placeholder="Search fashion..." aria-label="Search products">
+            <button type="submit" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+    </div>
+
+    <div class="filter-card">
+        <h4>Categories</h4>
+        <ul class="filter-list">
+            <li>
+                <a href="{{ request.path }}?{% if selected_price %}price={{ selected_price }}&{% endif %}sort={{ selected_sort }}"
+                   class="{% if not selected_category %}active{% endif %}">
+                    All Products
+                </a>
+            </li>
+            {% for cat in categories %}
+            <li>
+                <a href="{{ request.path }}?category={{ cat.name|urlencode }}{% if selected_price %}&price={{ selected_price }}{% endif %}&sort={{ selected_sort }}"
+                   class="{% if selected_category|lower == cat.name|lower %}active{% endif %}">
+                    {{ cat.name }}
+                    <span class="count">{{ cat.product_count }}</span>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="filter-card">
+        <h4>Price Range</h4>
+        <ul class="filter-list">
+            <li>
+                <a href="{{ request.path }}?{% if selected_category %}category={{ selected_category|urlencode }}&{% endif %}sort={{ selected_sort }}"
+                   class="{% if not selected_price %}active{% endif %}">
+                    Any price
+                </a>
+            </li>
+            {% for key, label in price_ranges %}
+            <li>
+                <a href="{{ request.path }}?price={{ key }}{% if selected_category %}&category={{ selected_category|urlencode }}{% endif %}&sort={{ selected_sort }}"
+                   class="{% if selected_price == key %}active{% endif %}">
+                    {{ label }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="promo-card d-none d-lg-block">
+        <img src="{% static 'images/offermodel1.jpg' %}" alt="Flat 50% off selected fashion" loading="lazy">
+        <div class="promo-card__body">
+            <h4>Flat 50% OFF</h4>
+            <p>On selected fashion collections</p>
+            <a href="{% url 'collections' %}" class="btn btn-warning btn-sm">Shop Now</a>
+        </div>
+    </div>
+
+</aside>
+
+</div>

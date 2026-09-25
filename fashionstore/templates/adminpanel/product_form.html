@@ -1,0 +1,118 @@
+{% extends 'adminpanel/base_admin.html' %}
+{% load static %}
+
+{% block title %}{% if is_edit %}Edit Product{% else %}Add Product{% endif %}{% endblock %}
+
+{% block admin_content %}
+
+<div class="admin-page-header">
+    <div>
+        <h1>{% if is_edit %}Edit Product{% else %}Add Product{% endif %}</h1>
+        <p>{% if is_edit %}Update details for "{{ product.name }}".{% else %}Fill in the details below to list a new product.{% endif %}</p>
+    </div>
+    <a href="{% url 'admin_products' %}" class="btn btn-outline-dark">
+        <i class="fa-solid fa-arrow-left"></i> Back to Products
+    </a>
+</div>
+
+<div class="admin-card">
+
+    <form method="POST" enctype="multipart/form-data" class="admin-form">
+        {% csrf_token %}
+
+        <div class="row">
+
+            <div class="col-md-8">
+
+                <label>Product Name *</label>
+                <input type="text" name="name" class="form-control"
+                       value="{% if form_data %}{{ form_data.name }}{% elif product %}{{ product.name }}{% endif %}"
+                       required>
+
+                <label>Category *</label>
+                <select name="category" class="form-select" required>
+                    <option value="" disabled {% if not product %}selected{% endif %}>Select a category</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat.id }}"
+                        {% if form_data %}
+                            {% if form_data.category == cat.id|stringformat:"s" %}selected{% endif %}
+                        {% elif product and product.category_id == cat.id %}selected{% endif %}>
+                        {{ cat.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <label>Description</label>
+                <textarea name="description" rows="4" class="form-control">{% if form_data %}{{ form_data.description }}{% elif product %}{{ product.description }}{% endif %}</textarea>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Price (₹) *</label>
+                        <input type="number" name="price" step="0.01" min="0" class="form-control"
+                               value="{% if form_data %}{{ form_data.price }}{% elif product %}{{ product.price }}{% endif %}"
+                               required>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Stock</label>
+                        <input type="number" name="stock" min="0" class="form-control"
+                               value="{% if form_data %}{{ form_data.stock }}{% elif product %}{{ product.stock }}{% else %}0{% endif %}">
+                    </div>
+                </div>
+
+                <div class="form-check">
+                    <input type="checkbox" name="is_available" id="is_available" class="form-check-input"
+                        {% if form_data %}
+                            {% if form_data.is_available %}checked{% endif %}
+                        {% elif not product or product.is_available %}checked{% endif %}>
+                    <label class="form-check-label" for="is_available">
+                        Available for purchase
+                    </label>
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label for="imageInput">Product Image</label>
+                <input type="file" name="image" id="imageInput" class="form-control" accept="image/*">
+                <small class="text-muted d-block mt-1">JPG, PNG or WebP. A portrait (3:4) photo looks best.</small>
+
+                <div class="admin-current-image" id="imagePreviewBox" {% if not product.image %}hidden{% endif %}>
+                    <small class="text-muted d-block mb-1" id="imagePreviewLabel">Current image:</small>
+                    <img id="imagePreview" src="{% if product.image %}{{ product.image.url }}{% endif %}" alt="{{ product.name|default:'Preview' }}">
+                </div>
+
+                {% if product and product.image %}
+                <div class="form-check mt-2">
+                    <input type="checkbox" name="image-clear" id="image-clear" class="form-check-input">
+                    <label class="form-check-label" for="image-clear">Remove current image</label>
+                </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-dark px-4">
+                {% if is_edit %}Save Changes{% else %}Add Product{% endif %}
+            </button>
+            <a href="{% url 'admin_products' %}" class="btn btn-outline-secondary px-4">Cancel</a>
+        </div>
+
+    </form>
+
+</div>
+
+<script>
+    // Preview the selected image before uploading.
+    document.getElementById("imageInput").addEventListener("change", function () {
+        const file = this.files[0];
+        if (!file) return;
+        document.getElementById("imagePreview").src = URL.createObjectURL(file);
+        document.getElementById("imagePreviewLabel").textContent = "New image (not saved yet):";
+        document.getElementById("imagePreviewBox").hidden = false;
+    });
+</script>
+
+{% endblock %}

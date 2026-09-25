@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" role="img" aria-label="No image available">
+  <rect width="400" height="500" fill="#f3f4f6"/>
+  <path d="M165 175l35-20 35 20 40 15-15 45-25-8v103h-70V227l-25 8-15-45z" fill="none" stroke="#c4c8cf" stroke-width="8" stroke-linejoin="round"/>
+  <text x="200" y="385" text-anchor="middle" font-family="Poppins, Arial, sans-serif" font-size="22" fill="#9ca3af">No image available</text>
+</svg>

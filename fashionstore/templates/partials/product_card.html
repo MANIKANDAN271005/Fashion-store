@@ -1,0 +1,55 @@
+{% load static %}
+{% comment %}
+Shared product card. Usage:
+    {% include 'partials/product_card.html' with product=product %}
+    {% include 'partials/product_card.html' with product=item.product remove_from_wishlist=True %}
+{% endcomment %}
+<article class="p-card">
+
+    <a href="{% url 'product_detail' product.id %}" class="p-card__media">
+        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'images/placeholder.svg' %}{% endif %}"
+             alt="{{ product.name }}"
+             loading="lazy">
+        {% if not product.is_available or product.stock <= 0 %}
+        <span class="p-card__badge">Out of stock</span>
+        {% endif %}
+    </a>
+
+    {% if remove_from_wishlist %}
+    <a href="{% url 'remove_from_wishlist' product.id %}"
+       class="p-card__wish p-card__wish--remove"
+       title="Remove from wishlist"
+       aria-label="Remove {{ product.name }} from wishlist">
+        <i class="fa-solid fa-trash-can"></i>
+    </a>
+    {% else %}
+    <a href="{% url 'add_to_wishlist' product.id %}"
+       class="p-card__wish"
+       title="Add to wishlist"
+       aria-label="Add {{ product.name }} to wishlist">
+        <i class="fa-regular fa-heart"></i>
+    </a>
+    {% endif %}
+
+    <div class="p-card__body">
+
+        <span class="p-card__cat">{{ product.category.name }}</span>
+
+        <h3 class="p-card__title">
+            <a href="{% url 'product_detail' product.id %}" title="{{ product.name }}">{{ product.name }}</a>
+        </h3>
+
+        <div class="p-card__price">₹{{ product.price }}</div>
+
+        <div class="p-card__actions">
+            <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-dark">View</a>
+            {% if product.is_available and product.stock > 0 %}
+            <a href="{% url 'add_to_cart' product.id %}" class="btn btn-dark" aria-label="Add {{ product.name }} to cart">
+                <i class="fa-solid fa-cart-shopping"></i> Add
+            </a>
+            {% endif %}
+        </div>
+
+    </div>
+
+</article>

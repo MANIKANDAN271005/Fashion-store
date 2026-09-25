@@ -1,0 +1,140 @@
+{% extends 'adminpanel/base_admin.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block admin_content %}
+
+<div class="admin-page-header">
+    <div>
+        <h1>Dashboard</h1>
+        <p>Welcome back, {{ request.user.username }}.</p>
+    </div>
+    <a href="{% url 'admin_product_add' %}" class="btn btn-dark">
+        <i class="fa-solid fa-plus"></i> Add Product
+    </a>
+</div>
+
+<div class="admin-stats">
+
+    <div class="admin-stat-card">
+        <div class="icon-box" style="background:#0d6efd;"><i class="fa-solid fa-users"></i></div>
+        <div>
+            <h3>{{ users }}</h3>
+            <p>Total Users</p>
+        </div>
+    </div>
+
+    <div class="admin-stat-card">
+        <div class="icon-box" style="background:#198754;"><i class="fa-solid fa-box-open"></i></div>
+        <div>
+            <h3>{{ products }}</h3>
+            <p>Total Products</p>
+        </div>
+    </div>
+
+    <div class="admin-stat-card">
+        <div class="icon-box" style="background:#6f42c1;"><i class="fa-solid fa-tags"></i></div>
+        <div>
+            <h3>{{ categories }}</h3>
+            <p>Categories</p>
+        </div>
+    </div>
+
+    <div class="admin-stat-card">
+        <div class="icon-box" style="background:#f59e0b;"><i class="fa-solid fa-cart-shopping"></i></div>
+        <div>
+            <h3>{{ orders }}</h3>
+            <p>Total Orders</p>
+        </div>
+    </div>
+
+    <div class="admin-stat-card">
+        <div class="icon-box" style="background:#dc3545;"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+        <div>
+            <h3>₹{{ revenue }}</h3>
+            <p>Total Revenue</p>
+        </div>
+    </div>
+
+</div>
+
+<div class="admin-card">
+
+    <h3>Recent Orders</h3>
+
+    <div class="table-responsive">
+        <table class="table admin-table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in recent_orders %}
+                <tr>
+                    <td><a href="{% url 'order_detail' order.id %}">#{{ order.id }}</a></td>
+                    <td>{{ order.user.username }}</td>
+                    <td><span class="badge bg-secondary">{{ order.status }}</span></td>
+                    <td>₹{{ order.total_price }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted py-4">No orders yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div class="admin-card">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+        <h3 class="mb-0">Low Stock <small class="text-muted fw-normal">({{ low_stock_threshold }} or fewer left)</small></h3>
+        <a href="{% url 'admin_products' %}?status=low-stock" class="btn btn-sm btn-outline-dark">Manage stock</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table admin-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Category</th>
+                    <th>Stock</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in low_stock_products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.category.name }}</td>
+                    <td>
+                        {% if product.stock == 0 %}
+                        <span class="badge bg-danger">Out of stock</span>
+                        {% else %}
+                        <span class="badge bg-warning text-dark">{{ product.stock }} left</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <a href="{% url 'admin_product_edit' product.id %}" class="btn btn-sm btn-outline-dark">
+                            <i class="fa-solid fa-pen"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted py-4">All products are well stocked.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

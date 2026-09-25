@@ -3,75 +3,173 @@ from django.contrib.auth import authenticate, login, logout
 from accounts.models import CustomUser, Product, Cart, Order, Wishlist, Category, OrderItem
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-from django.db.models import Q
+from django.db import transaction
+from django.db.models import Q, Count, F
 from django.contrib import messages
+
+SHIPPING_FEE = 150
+
+
+class OutOfStock(Exception):
+    """Raised inside checkout to roll back the order when a cart item exceeds stock."""
+
+    def __init__(self, product):
+        super().__init__(product.name)
+        self.product = product
+
+# Price filter buckets shown in the shop sidebar: key -> (label, min, max)
+PRICE_RANGES = {
+    "under-1000": ("Under ₹1,000", None, 1000),
+    "1000-2000": ("₹1,000 – ₹1,999", 1000, 2000),
+    "2000-4000": ("₹2,000 – ₹3,999", 2000, 4000),
+    "4000-plus": ("₹4,000 & above", 4000, None),
+}
+
+SORT_OPTIONS = {
+    "newest": ("Newest", "-created_at"),
+    "price-asc": ("Price: Low to High", "price"),
+    "price-desc": ("Price: High to Low", "-price"),
+    "name": ("Name: A to Z", "name"),
+}
+
+
+def search_products(products, query):
+    """Every word in the query must match the name, description or category."""
+    for term in query.split():
+        products = products.filter(
+            Q(name__icontains=term) |
+            Q(description__icontains=term) |
+            Q(category__name__icontains=term)
+        )
+    return products
+
+
+def filter_products(request, products):
+    """Apply the ?category=, ?price= and ?sort= filters shared by the shop pages."""
+
+    category = request.GET.get("category", "").strip()
+    price = request.GET.get("price", "")
+    sort = request.GET.get("sort", "newest")
+
+    if category:
+        products = products.filter(category__name__iexact=category)
+
+    if price in PRICE_RANGES:
+        _, low, high = PRICE_RANGES[price]
+        if low is not None:
+            products = products.filter(price__gte=low)
+        if high is not None:
+            products = products.filter(price__lt=high)
+    else:
+        price = ""
+
+    if sort not in SORT_OPTIONS:
+        sort = "newest"
+    products = products.order_by(SORT_OPTIONS[sort][1], "-id")
+
+    return products, {
+        "selected_category": category,
+        "selected_price": price,
+        "selected_price_label": PRICE_RANGES[price][0] if price else "",
+        "selected_sort": sort,
+        "price_ranges": [(key, value[0]) for key, value in PRICE_RANGES.items()],
+        "sort_options": [(key, value[0]) for key, value in SORT_OPTIONS.items()],
+        "categories": Category.objects.annotate(
+            product_count=Count("product", filter=Q(product__is_available=True))
+        ).order_by("name"),
+    }
+
 
 def home(request):
 
-    products = Product.objects.all()
-
-    category = request.GET.get('category')
-
-    if category:
-        products = products.filter(
-            category__name=category
-        )
+    products = Product.objects.filter(is_available=True).select_related("category").order_by("-created_at", "-id")
 
     return render(
         request,
         'home.html',
         {
-            'products': products
+            'products': products[:8],
         }
     )
 
 def shop(request):
 
-    products = Product.objects.all()
+    products = Product.objects.filter(is_available=True).select_related("category")
 
-    category = request.GET.get("category")
+    products, context = filter_products(request, products)
 
-    if category:
-        products = products.filter(category__name=category)
+    context.update({
+        "products": products,
+        "is_filtered": bool(context["selected_category"] or context["selected_price"]),
+    })
 
-    return render(
-        request,
-        "shop.html",
-        {
-            "products": products
-        }
-    )
+    return render(request, "shop.html", context)
 
 def about(request):
     return render(request,'about.html')
 
+CATEGORY_DISPLAY_IMAGES = {
+    "men": "images/men4.jpg",
+    "women": "images/women5.jpg",
+    "kids": "images/kids3.png",
+    "shoes": "images/shoes5.jpg",
+    "footwear": "images/shoes5.jpg",
+    "accessories": "images/Accessories1.jpg",
+    "watches": "images/watches3.jpg",
+}
+DEFAULT_CATEGORY_IMAGE = "images/productimage11.jpg"
+
 def collections(request):
 
-    categories = Category.objects.all()
+    categories = list(Category.objects.all())
 
-    products = Product.objects.all()
+    for cat in categories:
+        cat.display_image = CATEGORY_DISPLAY_IMAGES.get(
+            cat.name.strip().lower(), DEFAULT_CATEGORY_IMAGE
+        )
 
-    category_id = request.GET.get('category')
+    products = Product.objects.filter(is_available=True).select_related("category").order_by("-created_at", "-id")
 
-    if category_id:
+    category_id = request.GET.get('category', '')
+    selected = None
+
+    if category_id.isdigit():
+        selected = next((cat for cat in categories if cat.id == int(category_id)), None)
         products = products.filter(category_id=category_id)
 
     return render(request, "collections.html", {
         "products": products,
-        "categories": categories
+        "categories": categories,
+        "selected_category": selected,
     })
 
 def contact(request):
-    return render(request,'contact.html')
+
+    if request.method == "POST":
+
+        name = request.POST.get("name", "").strip()
+        email = request.POST.get("email", "").strip()
+        message = request.POST.get("message", "").strip()
+
+        if not name or not email or not message:
+            messages.error(request, "Please fill in all required fields.")
+        else:
+            messages.success(request, "Thank you! Your message has been sent.")
+            return redirect("contact")
+
+    return render(request, 'contact.html')
 
 
 def login_view(request):
 
     if request.method == "POST":
 
-        username = request.POST.get("username").strip()
+        username = request.POST.get("username", "").strip()
         password = request.POST.get("password")
-        role = request.POST.get("role")
+
+        if not username or not password:
+            messages.error(request, "Please enter both username and password.")
+            return render(request, "login.html")
 
         user = authenticate(
             request,
@@ -80,24 +178,11 @@ def login_view(request):
         )
 
         if user is None:
-            messages.error(request, "Invalid Username or Password")
+            messages.error(request, "Invalid username or password.")
             return render(request, "login.html")
 
         if not user.is_active:
-            messages.error(request, "Account is inactive")
-            return render(request, "login.html")
-
-        # Check selected role
-        if role == "seller" and user.role != "seller":
-            messages.error(request, "This is not a Seller account.")
-            return render(request, "login.html")
-
-        if role == "user" and user.role != "user":
-            messages.error(request, "This is not a User account.")
-            return render(request, "login.html")
-
-        if role == "admin" and not user.is_superuser:
-            messages.error(request, "This is not an Admin account.")
+            messages.error(request, "This account is inactive.")
             return render(request, "login.html")
 
         login(request, user)
@@ -108,7 +193,7 @@ def login_view(request):
         elif user.role == "seller":
             return redirect("seller_dashboard")
 
-        return redirect("user_dashboard")
+        return redirect("dashboard")
 
     return render(request, "login.html")
 
@@ -120,13 +205,21 @@ def register(request):
 
     if request.method == "POST":
 
-        fullname = request.POST.get("fullname")
-        username = request.POST.get("username")
-        email = request.POST.get("email")
-        phone = request.POST.get("phone")
-        password1 = request.POST.get("password1")
-        password2 = request.POST.get("password2")
+        fullname = request.POST.get("fullname", "").strip()
+        username = request.POST.get("username", "").strip()
+        email = request.POST.get("email", "").strip()
+        phone = request.POST.get("phone", "").strip()
+        password1 = request.POST.get("password1", "")
+        password2 = request.POST.get("password2", "")
         role = request.POST.get("role")
+
+        if not fullname or not username or not email or not role:
+            messages.error(request, "Please fill in all required fields.")
+            return redirect("register")
+
+        if len(password1) < 6:
+            messages.error(request, "Password must be at least 6 characters.")
+            return redirect("register")
 
         if password1 != password2:
             messages.error(request, "Passwords do not match")
@@ -160,86 +253,128 @@ def register(request):
 
 def category(request):
 
-    categories = Category.objects.all()
+    products = Product.objects.filter(is_available=True).select_related("category")
 
-    return render(request, "category.html", {
-        "categories": categories
-    })
+    products, context = filter_products(request, products)
+
+    context["products"] = products
+
+    return render(request, "category.html", context)
 
 def search(request):
 
-    query = request.GET.get("q", "")
+    query = request.GET.get("q", "").strip()
 
-    products = Product.objects.all()
+    products = Product.objects.filter(is_available=True).select_related("category")
 
     if query:
+        products = search_products(products, query)
 
-        products = products.filter(
-            Q(name__icontains=query) |
-            Q(description__icontains=query)
-        )
+    products, context = filter_products(request, products)
 
-    return render(
-        request,
-        "shop.html",
-        {
-            "products": products,
-            "query": query
-        }
-    )
+    context.update({
+        "products": products if query else products.none(),
+        "query": query,
+    })
+
+    return render(request, "search.html", context)
 
 @login_required
 def checkout(request):
 
     cart_items = Cart.objects.filter(user=request.user)
 
+    if not cart_items and request.method == "GET":
+        messages.error(request, "Your cart is empty.")
+        return redirect("cart")
+
     subtotal = sum(
         item.product.price * item.quantity
         for item in cart_items
     )
 
-    total = subtotal + 150
+    total = subtotal + SHIPPING_FEE
+
+    context = {
+        "subtotal": subtotal,
+        "shipping_fee": SHIPPING_FEE,
+        "total": total,
+        "cart_items": cart_items,
+    }
 
     if request.method == "POST":
 
-        order = Order.objects.create(
-            user=request.user,
-            full_name=request.POST["full_name"],
-            phone=request.POST["phone"],
-            address=request.POST["address"],
-            city=request.POST["city"],
-            state=request.POST["state"],
-            pincode=request.POST["pincode"],
-            payment_method=request.POST["payment"],
-            total_price=total)
+        if not cart_items:
+            messages.error(request, "Your cart is empty.")
+            return redirect("cart")
 
-        for item in cart_items:
+        details = {
+            field: request.POST.get(field, "").strip()
+            for field in ("full_name", "phone", "address", "city", "state", "pincode")
+        }
+        payment = request.POST.get("payment", "")
 
-            OrderItem.objects.create(
-    order=order,
-    product=item.product,
-    quantity=item.quantity,
-    price=item.product.price
-)
+        if not all(details.values()):
+            messages.error(request, "Please complete all delivery details.")
+            return render(request, "checkout.html", context)
 
-        cart_items.delete()
+        if payment not in dict(Order.PAYMENT_CHOICES):
+            messages.error(request, "Please choose a valid payment method.")
+            return render(request, "checkout.html", context)
+
+        try:
+            with transaction.atomic():
+
+                order = Order.objects.create(
+                    user=request.user,
+                    payment_method=payment,
+                    total_price=total,
+                    **details,
+                )
+
+                for item in cart_items:
+
+                    product = item.product
+
+                    # Conditional update so two shoppers can't buy the same last unit.
+                    reserved = Product.objects.filter(
+                        id=product.id,
+                        is_available=True,
+                        stock__gte=item.quantity,
+                    ).update(stock=F("stock") - item.quantity)
+
+                    if not reserved:
+                        raise OutOfStock(product)
+
+                    OrderItem.objects.create(
+                        order=order,
+                        product=product,
+                        quantity=item.quantity,
+                        price=product.price
+                    )
+
+                cart_items.delete()
+
+        except OutOfStock as error:
+            product = Product.objects.get(id=error.product.id)
+            if not product.is_available or product.stock == 0:
+                messages.error(request, f"\"{product.name}\" is no longer available. Please remove it from your cart.")
+            else:
+                messages.error(request, f"Only {product.stock} of \"{product.name}\" left in stock. Please update your cart.")
+            return redirect("cart")
 
         return redirect("order_success")
 
-    return render(
-        request,
-        "checkout.html",
-        {
-            "subtotal": subtotal,
-            "total": total
-        }
-    )
+    return render(request, "checkout.html", context)
 
+@login_required
 def order_detail(request, id):
 
-    order = get_object_or_404(Order, id=id)
+    if request.user.is_superuser:
+        order = get_object_or_404(Order, id=id)
+    else:
+        order = get_object_or_404(Order, id=id, user=request.user)
 
-    # Replace this with your actual OrderItem model if you have one
     items = OrderItem.objects.filter(order=order)
 
     return render(request, "order_detail.html", {
@@ -258,7 +393,10 @@ def product_detail(request, id):
 
     product = get_object_or_404(Product, id=id)
 
-    related_products = Product.objects.exclude(
+    related_products = Product.objects.filter(
+        category=product.category,
+        is_available=True,
+    ).exclude(
         id=id
     )[:4]
 
@@ -277,7 +415,11 @@ def profile(request):
 
 @login_required
 def add_to_cart(request, id):
-    product = Product.objects.get(id=id)
+    product = get_object_or_404(Product, id=id)
+
+    if not product.is_available or product.stock <= 0:
+        messages.error(request, "This product is currently unavailable.")
+        return redirect('product_detail', id=id)
 
     cart_item, created = Cart.objects.get_or_create(
         user=request.user,
@@ -285,8 +427,11 @@ def add_to_cart(request, id):
     )
 
     if not created:
-        cart_item.quantity += 1
-        cart_item.save()
+        if cart_item.quantity >= product.stock:
+            messages.error(request, f"Only {product.stock} of \"{product.name}\" in stock.")
+        else:
+            cart_item.quantity += 1
+            cart_item.save()
 
     return redirect('cart')
 
@@ -298,30 +443,6 @@ def remove_cart(request, id):
         item.delete()
 
     return redirect('cart')
-
-@login_required
-def user_dashboard(request):
-
-    orders = Order.objects.filter(
-        user=request.user
-    )
-
-    context = {
-        'orders': orders,
-        'total_orders': orders.count(),
-        'total_cart': Cart.objects.filter(
-            user=request.user
-        ).count(),
-        'total_wishlist': Wishlist.objects.filter(
-            user=request.user
-        ).count()
-    }
-
-    return render(
-        request,
-        'user_dashboard.html',
-        context
-    )
 
 @login_required
 def seller_dashboard(request):
@@ -342,26 +463,6 @@ def seller_dashboard(request):
         }
     )
 
-@login_required
-def admin_dashboard(request):
-
-    users = User.objects.count()
-
-    products = Product.objects.count()
-
-    orders = Order.objects.count()
-
-    revenue = sum(order.total_price for order in Order.objects.all())
-
-    recent_orders = Order.objects.order_by('-id')[:10]
-
-    return render(request, "admin_dashboard.html", {
-        "users": users,
-        "products": products,
-        "orders": orders,
-        "revenue": revenue,
-        "recent_orders": recent_orders,
-    })
 @login_required
 def wishlist(request):
 
@@ -402,34 +503,27 @@ def remove_from_wishlist(request, product_id):
 
     return redirect("wishlist")
 
-def category_products(request, id):
-    products = Product.objects.filter(
-        category=id
-    )
-
-    return render(
-        request,
-        'shop.html',
-        {'products': products}
-    )
-
 @login_required
 def cart(request):
 
     cart_items = Cart.objects.filter(user=request.user)
 
-    total = 0
+    subtotal = 0
 
     for item in cart_items:
 
-        total += item.product.price * item.quantity
+        subtotal += item.product.price * item.quantity
+
+    shipping = SHIPPING_FEE if cart_items else 0
 
     return render(
         request,
         "cart.html",
         {
             "cart_items": cart_items,
-            "total": total,
+            "subtotal": subtotal,
+            "shipping": shipping,
+            "grand_total": subtotal + shipping,
         },
     )
 
@@ -472,8 +566,11 @@ def increase_cart(request, id):
         user=request.user
     )
 
-    cart_item.quantity += 1
-    cart_item.save()
+    if cart_item.quantity >= cart_item.product.stock:
+        messages.error(request, f"Only {cart_item.product.stock} of \"{cart_item.product.name}\" in stock.")
+    else:
+        cart_item.quantity += 1
+        cart_item.save()
 
     return redirect("cart")
 
@@ -512,6 +609,10 @@ def remove_cart_item(request, id):
 def buy_now(request, id):
 
     product = get_object_or_404(Product, id=id)
+
+    if not product.is_available or product.stock <= 0:
+        messages.error(request, "This product is currently unavailable.")
+        return redirect('product_detail', id=id)
 
     cart, created = Cart.objects.get_or_create(
         user=request.user,

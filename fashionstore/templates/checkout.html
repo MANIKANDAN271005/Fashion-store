@@ -2,156 +2,107 @@
 {% load static %}
 
 {% block title %}
-
-Checkout
-
+Checkout | Fashion Store
 {% endblock %}
 
 {% block content %}
 
-<section class="checkout-page">
+<section class="page-hero">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'cart' %}">Cart</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+            </ol>
+        </nav>
+        <h1>Checkout</h1>
+        <p>Enter your delivery details to place the order.</p>
+    </div>
+</section>
+
+<section class="section">
 
 <div class="container">
 
-<h1 class="mb-5">
+<div class="row g-4">
 
-Checkout
-
-</h1>
-
-<div class="row">
-
-<!-- Billing -->
+<!-- BILLING -->
 
 <div class="col-lg-8">
 
-<div class="checkout-card">
+<div class="form-card">
 
-<h3>
+<h3 class="panel-title">Delivery Details</h3>
 
-Billing Details
-
-</h3>
-
-<form method="POST">
+<form method="POST" id="checkoutForm">
 {% csrf_token %}
 
-<div class="row">
+<div class="row g-3">
 
-<div class="col-md-6">
+    <div class="col-md-6">
+        <label class="form-label" for="full_name">Full Name</label>
+        <input type="text" class="form-control" id="full_name" name="full_name"
+               value="{{ request.POST.full_name|default:user.get_full_name|default:user.first_name }}" autocomplete="name" required>
+    </div>
 
-<label>Full Name</label>
+    <div class="col-md-6">
+        <label class="form-label" for="email">Email</label>
+        <input type="email" class="form-control" id="email" name="email"
+               value="{{ user.email }}" autocomplete="email" required>
+    </div>
 
-<input type="text"
-class="form-control"
-name="fullname">
+    <div class="col-md-6">
+        <label class="form-label" for="phone">Phone</label>
+        <input type="tel" class="form-control" id="phone" name="phone"
+               value="{{ request.POST.phone|default:user.phone }}" autocomplete="tel" required>
+    </div>
 
-</div>
+    <div class="col-md-6">
+        <label class="form-label" for="city">City</label>
+        <input type="text" class="form-control" id="city" name="city" value="{{ request.POST.city }}" autocomplete="address-level2" required>
+    </div>
 
-<div class="col-md-6">
+    <div class="col-12">
+        <label class="form-label" for="address">Address</label>
+        <textarea class="form-control" id="address" rows="3" name="address" autocomplete="street-address" required>{{ request.POST.address }}</textarea>
+    </div>
 
-<label>Email</label>
+    <div class="col-md-6">
+        <label class="form-label" for="state">State</label>
+        <input type="text" class="form-control" id="state" name="state" value="{{ request.POST.state }}" autocomplete="address-level1" required>
+    </div>
 
-<input
-type="email"
-class="form-control"
-name="email">
-
-</div>
-
-<div class="col-md-6 mt-3">
-
-<label>Phone</label>
-
-<input
-type="text"
-class="form-control"
-name="phone">
-
-</div>
-
-<div class="col-md-6 mt-3">
-
-<label>City</label>
-
-<input
-type="text"
-class="form-control"
-name="city">
+    <div class="col-md-6">
+        <label class="form-label" for="pincode">Pincode</label>
+        <input type="text" class="form-control" id="pincode" name="pincode" value="{{ request.POST.pincode }}" inputmode="numeric" autocomplete="postal-code" required>
+    </div>
 
 </div>
 
-<div class="col-12 mt-3">
+<h3 class="panel-title mt-5">Payment Method</h3>
 
-<label>Address</label>
+<div class="pay-options">
 
-<textarea
-class="form-control"
-rows="3"
-name="address"></textarea>
+    <label class="pay-option">
+        <input type="radio" name="payment" value="COD" checked>
+        <span><i class="fa-solid fa-money-bill-wave"></i> Cash on Delivery</span>
+    </label>
 
-</div>
+    <label class="pay-option">
+        <input type="radio" name="payment" value="UPI">
+        <span><i class="fa-solid fa-mobile-screen"></i> UPI</span>
+    </label>
 
-<div class="col-md-6 mt-3">
+    <label class="pay-option">
+        <input type="radio" name="payment" value="DEBIT_CARD">
+        <span><i class="fa-regular fa-credit-card"></i> Debit Card</span>
+    </label>
 
-<label>State</label>
-
-<input
-type="text"
-class="form-control"
-name="state">
-
-</div>
-
-<div class="col-md-6 mt-3">
-
-<label>Pincode</label>
-
-<input
-type="text"
-class="form-control"
-name="pincode">
-
-</div>
-
-</div>
-
-<h4 class="mt-5">
-
-Payment Method
-
-</h4>
-
-<div class="payment-box">
-
-<label>
-<input type="radio"
-name="payment"
-value="COD"
-checked>
-Cash on Delivery
-</label>
-
-<label>
-<input type="radio"
-name="payment"
-value="UPI">
-UPI
-</label>
-
-<label>
-<input type="radio"
-name="payment"
-value="Debit Card">
-Debit Card
-</label>
-
-<label>
-<input type="radio"
-name="payment"
-value="Credit Card">
-Credit Card
-</label>
+    <label class="pay-option">
+        <input type="radio" name="payment" value="CREDIT_CARD">
+        <span><i class="fa-solid fa-credit-card"></i> Credit Card</span>
+    </label>
 
 </div>
 
@@ -161,77 +112,49 @@ Credit Card
 
 </div>
 
-<!-- Summary -->
+<!-- SUMMARY -->
 
 <div class="col-lg-4">
 
-<div class="summary-box">
+<div class="summary-card">
 
-<h3>
+    <h3>Order Summary</h3>
 
-Order Summary
+    <div class="summary-items">
+        {% for item in cart_items %}
+        <div class="summary-item">
+            <img class="table-thumb"
+                 src="{% if item.product.image %}{{ item.product.image.url }}{% else %}{% static 'images/placeholder.svg' %}{% endif %}"
+                 alt="{{ item.product.name }}">
+            <div class="summary-item__name">
+                {{ item.product.name|truncatechars:48 }}
+                <small>Qty {{ item.quantity }}</small>
+            </div>
+            <span class="summary-item__price">₹{{ item.total_price|floatformat:2 }}</span>
+        </div>
+        {% endfor %}
+    </div>
 
-</h3>
+    <div class="summary-row">
+        <span>Subtotal</span>
+        <span>₹{{ subtotal|floatformat:2 }}</span>
+    </div>
 
-<hr>
+    <div class="summary-row">
+        <span>Shipping</span>
+        <span>₹{{ shipping_fee|floatformat:2 }}</span>
+    </div>
 
-<div class="summary-row">
+    <div class="summary-total">
+        <span>Total</span>
+        <span>₹{{ total|floatformat:2 }}</span>
+    </div>
 
-<span>Subtotal</span>
+    <button type="submit" form="checkoutForm" class="btn btn-dark btn-lg w-100 mt-4">
+        Place Order
+    </button>
 
-<span>
-
-₹{{ subtotal }}
-
-</span>
-
-</div>
-
-<div class="summary-row">
-
-<span>Shipping</span>
-
-<span>
-
-₹100
-
-</span>
-
-</div>
-
-<div class="summary-row">
-
-<span>Tax</span>
-
-<span>
-
-₹50
-
-</span>
-
-</div>
-
-<hr>
-
-<div class="summary-total">
-
-<span>Total</span>
-
-<span>
-
-₹{{ total }}
-
-</span>
-
-</div>
-
-<button
-type="submit"
-class="btn btn-dark w-100 mt-4">
-
-Place Order
-
-</button>
+    <p class="summary-note"><i class="fa-solid fa-lock me-1"></i> Your details are sent securely</p>
 
 </div>
 
